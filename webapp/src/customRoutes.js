@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Redirect, Route, Switch,} from "react-router-do
 import {combineReducers, createStore} from 'redux';
 import App from './App'
 import { reducer } from './reducers/initialState'
+import Calender from './components/Calendar'
 
 
 const reducers = combineReducers({
@@ -21,6 +22,7 @@ class CustomRoutes extends React.Component {
                 <Router>
                     <Switch>
                         <Route path="/signup" component={App} exact/>
+                        <Route path="/calendar" component={Calender} exact/>
                         <Route path="/">
                             <Redirect to="/signup"/>
                         </Route>
