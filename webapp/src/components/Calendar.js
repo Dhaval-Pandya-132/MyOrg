@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar-like-google';
+import { connect } from 'react-redux';
 import events from './events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
 import ApiCalendar from 'react-google-calendar-api'
-import Event from './Event'
+import EventForm from './EventForm'
+import { showAndHideModal } from './../actions/eventFormModalActions'
 
 class Calender extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      modalShow: false
+      modalShow: false,
+      startDate: "",
+      startTime: "",
+      endDate: "",
+      endTime: ""
     }
 
 
@@ -54,9 +60,9 @@ class Calender extends Component {
   }
 
 
-  setModalShow = (modalShow) => {
-    this.setState({ modalShow });
-  }
+  // setModalShow = (modalShow) => {
+  //   this.setState({ modalShow });
+  // }
 
   render() {
     console.log("props", this.props);
@@ -79,8 +85,8 @@ class Calender extends Component {
               </button> */}
 
 
-        <Event show={this.state.modalShow}
-          onHide={() => this.setModalShow(false)} animation={false}
+        <EventForm showModal={this.props.show} {...this.state}
+          animation={false}
           backdrop={false}
         />
         <BigCalendar
@@ -95,7 +101,15 @@ class Calender extends Component {
           defaultDate={new Date()}
           onSelectEvent={event => alert(event.title)}
           onSelectSlot={(slotInfo) => {
-            this.setModalShow(true);
+            this.props.setModalShow(true);
+            this.setState({
+              startDate: moment(slotInfo.start).format("YYYY-MM-DD"),
+              endDate: moment(slotInfo.start).format("YYYY-MM-DD"),
+              startTime: moment(slotInfo.start.toLocaleString()).format("hh:mm"),
+              endTime: moment(slotInfo.end.toLocaleString()).format("hh:mm")
+
+            })
+
             console.log(
               `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
               `\nend: ${slotInfo.end.toLocaleString()}` +
@@ -109,6 +123,12 @@ class Calender extends Component {
 
 }
 
+const mapStateToProps = (state) => ({
+  show: state.eventFormReducer.modalShow
+});
 
+const mapDispatchToProps = (dispatch) => ({
+  setModalShow: (show) => showAndHideModal(dispatch, show),
+})
 
-export default Calender;
+export default connect(mapStateToProps, mapDispatchToProps)(Calender);
