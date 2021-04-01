@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch, } from "react-router-
 import { combineReducers, createStore } from 'redux';
 import App from './App'
 import { eventFormReducer } from './reducers/eventFormModalState'
-import Calender from './components/Calendar'
+import Calender from './components/Calendar/Calendar'
 
 
 const reducers = combineReducers({

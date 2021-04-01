@@ -6,26 +6,69 @@ import moment from 'moment';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { connect } from "react-redux";
-import { EVENTFORM_INIT_STATE } from './constants'
-import { showAndHideModal } from './../actions/eventFormModalActions'
+import { EVENTFORM_INIT_STATE } from '../constants'
+import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
+import ErrorList from '../ErrorList/ErrorList';
+
 
 class EventForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            formData: { ...EVENTFORM_INIT_STATE }
+            formData: { ...EVENTFORM_INIT_STATE },
+            errorList: []
         }
     }
 
 
-    save = () => {
-        this.clearState();
+    save = (event) => {
+
+        if (this.validateForm()) {
+            // save data and clear state
+            this.clearState();
+            return;
+        }
+    }
+
+    validateForm = () => {
+        let errorList = [];
+        let localFormData = { ...this.state.formData };
+        let { dateRange } = { ...this.props };
+        console.log('localFormData', localFormData)
+        if (localFormData.summary === "") {
+            errorList.push("Title is required")
+        }
+        if (dateRange.start.date === ""
+            || dateRange.start.time === "") {
+            errorList.push("Start date/time is required")
+        }
+        if (dateRange.end.date === ""
+            || dateRange.end.time === "") {
+            errorList.push("End date/time is required")
+        }
+        if (dateRange.start.date !== ""
+            && dateRange.start.time !== ""
+            && dateRange.end.date !== ""
+            && dateRange.end.time !== ""
+        ) {
+            if (dateRange.start.date > dateRange.end.date) {
+                errorList.push("Start date should be greater than end date")
+            }
+            if (dateRange.start.time > dateRange.end.time) {
+                errorList.push("Start time should be greater than end time")
+            }
+
+        }
+        this.setState({ errorList });
+        return errorList.length === 0;
+
     }
 
     clearState = () => {
         this.setState({
-            formData: { ...EVENTFORM_INIT_STATE }
+            formData: { ...EVENTFORM_INIT_STATE },
+            errorList: []
         });
         this.props.setModalShow(false);
     }
@@ -33,6 +76,7 @@ class EventForm extends React.Component {
 
     onChangeEvent = (event) => {
         // console.log("Event", event);
+        let dateRange = {}
         switch (event.target.id) {
             case 'title':
                 this.setState({
@@ -43,53 +87,36 @@ class EventForm extends React.Component {
             case 'description':
                 this.setState({
                     formData:
-                        { description: event.target.value }
+                    {
+                        ...this.state.formData
+                        , description: event.target.value
+                    }
                 });
                 break;
             case 'startDate':
-                this.setState({
-                    formData: {
-                        start:
-                        {
-                            date:
-                                moment(event.target.value).format("YYYY-MM-DD")
-                        }
-                    }
-                });
+                dateRange = { ...this.props.dateRange }
+                dateRange.start.date = moment(event.target.value).format("YYYY-MM-DD");
+                this.props.updateDateRange(dateRange);
                 break;
             case 'startTime':
-                this.setState({
-                    formData:
-                    {
-                        start: { time: event.target.value }
-                    }
-                });
+                dateRange = { ...this.props.dateRange }
+                dateRange.start.time = event.target.value;
+                this.props.updateDateRange(dateRange);
                 break;
             case 'endDate':
-                this.setState({
-                    formData:
-                    {
-                        end:
-                        {
-                            date: moment(event.target.value).format("YYYY-MM-DD")
-                        }
-                    }
-                });
+                dateRange = { ...this.props.dateRange }
+                dateRange.end.date = moment(event.target.value).format("YYYY-MM-DD");
+                this.props.updateDateRange(dateRange);
                 break;
             case 'endTime':
-                this.setState({
-                    formData:
-                    {
-                        end: {
-                            time: event.target.value
-                        }
-                    }
-                });
+                dateRange = { ...this.props.dateRange }
+                dateRange.end.time = event.target.value;
+                this.props.updateDateRange(dateRange);
                 break;
             case 'attendees':
                 this.setState({
                     formData:
-                        { attendees: event.target.value }
+                        { ...this.state.formData, attendees: event.target.value }
                 });
                 break;
             default:
@@ -101,42 +128,18 @@ class EventForm extends React.Component {
 
 
     render() {
-
         console.log("this.state", this.state);
-
-        let startDate, startTime, endDate, endTime, isShow;
+        let { errorList } = { ...this.state };
+        let { dateRange } = { ...this.props };
         let localFormData = { ...this.state.formData }
-        if (localFormData.start.date !== "" && localFormData.start.date !== this.props.startDate) {
-            startDate = moment(localFormData.start.date).format("YYYY-MM-DD");
-            startTime = localFormData.start.time;
-            isShow = localFormData.modalShow;
-        }
-        else {
-            startDate = moment(this.props.startDate).format("YYYY-MM-DD")
-            startTime = this.props.startTime;
-            isShow = this.props.showModal;
-        }
-
-
-        if (localFormData.end.date !== "" && localFormData.end.date !== this.props.endDate) {
-            endDate = moment(localFormData.end.date).format("YYYY-MM-DD");
-            endTime = localFormData.end.time;
-        }
-        else {
-            endDate = moment(this.props.endDate).format("YYYY-MM-DD");
-            endTime = this.props.endTime;
-        }
-
-
-
         return (
             <Modal
                 {...this.props}
-                show={isShow}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
+                <ErrorList errorList={errorList} />
                 <Modal.Header>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Add New Event
@@ -144,16 +147,17 @@ class EventForm extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-
                         <Form.Group as={Row} >
                             <Col sm={2}>  <Form.Label>Title</Form.Label></Col>
                             <Col sm={10}>
                                 <Form.Control id="title"
+                                    required={true}
                                     type="text"
                                     value={localFormData.summary}
                                     placeholder="Add Title / Summary"
                                     onChange={(event) => { this.onChangeEvent(event) }}
-                                /></Col>
+                                />
+                            </Col>
                         </Form.Group>
                         <Form.Group as={Row} >
                             <Col sm={2}>  <Form.Label>Description</Form.Label></Col>
@@ -172,14 +176,14 @@ class EventForm extends React.Component {
                             <Col sm={5}>
                                 <Form.Control
                                     id="startDate"
-                                    value={startDate}
+                                    value={dateRange.start.date}
                                     onChange={(event) => {
                                         this.onChangeEvent(event);
                                     }} type="date" /></Col>
                             <Col sm={5}><Form.Control
                                 id="startTime"
                                 type="time"
-                                value={startTime}
+                                value={dateRange.start.time}
                                 onChange={(event) => {
                                     this.onChangeEvent(event);
                                 }}
@@ -192,13 +196,13 @@ class EventForm extends React.Component {
                             <Col sm={5}><Form.Control
                                 id="endDate"
                                 type="date"
-                                value={endDate}
+                                value={dateRange.end.date}
                                 onChange={(event) => {
                                     this.onChangeEvent(event);
                                 }} /></Col>
                             <Col sm={5}><Form.Control
                                 id="endTime"
-                                value={endTime}
+                                value={dateRange.end.time}
                                 type="time"
                                 onChange={(event) => {
                                     this.onChangeEvent(event);
@@ -220,19 +224,22 @@ class EventForm extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => this.clearState()}>Close</Button>
-                    <Button onClick={() => this.save()}>Save</Button>
+                    <Button type="submit" onClick={(event) => this.save(event)}>Save</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal >
+
         );
     }
 }
 
 const mapStateToProps = (state) => ({
-    show: state.eventFormReducer.modalShow
+    show: state.eventFormReducer.modalShow,
+    dateRange: state.eventFormReducer.dateRange
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setModalShow: (show) => showAndHideModal(dispatch, show),
+    updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventForm);

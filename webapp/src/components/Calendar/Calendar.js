@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar-like-google';
 import { connect } from 'react-redux';
-import events from './events';
+import events from '../events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
 import ApiCalendar from 'react-google-calendar-api'
-import EventForm from './EventForm'
-import { showAndHideModal } from './../actions/eventFormModalActions'
+import EventForm from '../EventsForm/EventForm'
+import {
+  showAndHideModal
+  , updateDateRange
+} from '../../actions/eventFormModalActions'
 
 class Calender extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      modalShow: false,
-      startDate: "",
-      startTime: "",
-      endDate: "",
-      endTime: ""
-    }
+    // this.state = {
+    //   modalShow: false,
+    //   // startDate: "",
+    //   // startTime: "",
+    //   // endDate: "",
+    //   // endTime: ""
+    // }
 
 
     BigCalendar.momentLocalizer(moment);
@@ -85,30 +88,36 @@ class Calender extends Component {
               </button> */}
 
 
-        <EventForm showModal={this.props.show} {...this.state}
+        <EventForm show={this.props.show}
           animation={false}
           backdrop={false}
         />
         <BigCalendar
           selectable
-          //   min={moment('12:00am', 'h:mma').toDate()}
-          //   max={moment('11:59pm', 'h:mma').toDate()}
           events={events}
           defaultView='week'
           onLeftMenu={() => { }}
+          onClick={() => { }}
           popup={true}
           scrollToTime={new Date(1970, 1, 1, 6)}
           defaultDate={new Date()}
           onSelectEvent={event => alert(event.title)}
           onSelectSlot={(slotInfo) => {
             this.props.setModalShow(true);
-            this.setState({
-              startDate: moment(slotInfo.start).format("YYYY-MM-DD"),
-              endDate: moment(slotInfo.start).format("YYYY-MM-DD"),
-              startTime: moment(slotInfo.start.toLocaleString()).format("hh:mm"),
-              endTime: moment(slotInfo.end.toLocaleString()).format("hh:mm")
+            const dateRange = {
+              start: {
+                date: moment(slotInfo.start).format("YYYY-MM-DD"),
+                time: moment(slotInfo.start.toLocaleString()).format("hh:mm"),
+                timezone: ""
+              },
+              end: {
+                date: moment(slotInfo.end).format("YYYY-MM-DD"),
+                time: moment(slotInfo.end.toLocaleString()).format("hh:mm"),
+                timezone: ""
+              }
+            }
+            this.props.updateDateRange(dateRange);
 
-            })
 
             console.log(
               `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
@@ -124,11 +133,13 @@ class Calender extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  show: state.eventFormReducer.modalShow
+  show: state.eventFormReducer.modalShow,
+  dateRange: state.eventFormReducer.dateRange
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setModalShow: (show) => showAndHideModal(dispatch, show),
+  updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calender);
