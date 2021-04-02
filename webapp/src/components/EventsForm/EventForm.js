@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import { connect } from "react-redux";
 import { EVENTFORM_INIT_STATE } from '../constants'
 import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
+import { addNewEvent } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
 
 
@@ -26,6 +27,11 @@ class EventForm extends React.Component {
 
         if (this.validateForm()) {
             // save data and clear state
+            let formData = {
+                ...this.state.formData,
+                ...this.props.dateRange
+            }
+            this.props.addNewEvent(formData);
             this.clearState();
             return;
         }
@@ -239,7 +245,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     setModalShow: (show) => showAndHideModal(dispatch, show),
-    updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange)
+    updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
+    addNewEvent: (event) => addNewEvent(dispatch, event)
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventForm);

@@ -69,6 +69,25 @@ class Calender extends Component {
 
   render() {
     console.log("props", this.props);
+    let { eventList } = { ...this.props };
+
+    let eventsList = eventList.map(event => {
+
+      return {
+        "title": event.summary,
+
+        "start": new Date(event.start.date + ' ' + event.start.time),
+        "end": new Date(event.end.date + ' ' + event.end.time),
+        "desc": event.description
+
+      }
+    })
+
+
+    console.log("eventsList", eventsList);
+    console.log("event", events);
+
+
     return (
 
       <div ref={this.myRef} {...this.props} style={{ height: 600 }}>
@@ -94,7 +113,7 @@ class Calender extends Component {
         />
         <BigCalendar
           selectable
-          events={events}
+          events={eventsList}
           defaultView='week'
           onLeftMenu={() => { }}
           onClick={() => { }}
@@ -134,7 +153,8 @@ class Calender extends Component {
 
 const mapStateToProps = (state) => ({
   show: state.eventFormReducer.modalShow,
-  dateRange: state.eventFormReducer.dateRange
+  dateRange: state.eventFormReducer.dateRange,
+  eventList: state.calendarReducer.eventList
 });
 
 const mapDispatchToProps = (dispatch) => ({

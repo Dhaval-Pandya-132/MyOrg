@@ -4,11 +4,13 @@ import { BrowserRouter as Router, Redirect, Route, Switch, } from "react-router-
 import { combineReducers, createStore } from 'redux';
 import App from './App'
 import { eventFormReducer } from './reducers/eventFormModalState'
+import { calendarReducer } from './reducers/calendarState'
 import Calender from './components/Calendar/Calendar'
 
 
 const reducers = combineReducers({
-    eventFormReducer
+    eventFormReducer,
+    calendarReducer
 });
 
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__
