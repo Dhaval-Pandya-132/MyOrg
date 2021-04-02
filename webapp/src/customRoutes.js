@@ -2,7 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {BrowserRouter as Router, Redirect, Route, Switch,} from "react-router-dom";
 import {combineReducers, createStore} from 'redux';
-import App from './App'
+import App from './components/App';
 import { reducer } from './reducers/initialState'
 
 
