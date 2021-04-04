@@ -14,6 +14,13 @@ const app = express();
 mongoose.connect(CONSTANT.DB_URL,
     { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT");
+    next();
+});  
+
 app.use(cookieSession({
     name: 'google-auth-session',
     keys: ['key1', 'key2']
