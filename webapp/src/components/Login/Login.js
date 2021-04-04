@@ -1,8 +1,9 @@
 import React from 'react';
-import { useGoogleLogin } from 'react-google-login';
+import useGoogleLogin from 'react-google-login';
+import './Login.scss';
 
 // refresh token
-import { refreshTokenSetup } from '../utils/refreshToken';
+import { refreshTokenSetup } from '../../utils/refreshToken';
 
 const clientId =
   '259512103532-cvvunkt98fmil35ppucov9iu8lcf3mgl.apps.googleusercontent.com';
