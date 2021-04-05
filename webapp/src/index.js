@@ -5,9 +5,9 @@ import CustomRoutes  from './customRoutes';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <CustomRoutes />
-  </React.StrictMode>,
+  // <React.StrictMode>
+    <CustomRoutes />,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 
