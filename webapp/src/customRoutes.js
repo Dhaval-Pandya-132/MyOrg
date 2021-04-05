@@ -24,7 +24,7 @@ class CustomRoutes extends React.Component {
                 <Router>
                     <Switch>
                         <Route path="/signup" component={App} exact />
-                        <Route path="/calendar" component={Calender} exact />
+                        <Route path="/calendar" component={Calender} />
                         <Route path="/">
                             <Redirect to="/signup" />
                         </Route>

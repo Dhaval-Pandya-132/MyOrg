@@ -15,18 +15,8 @@ class Calender extends Component {
 
   constructor(props) {
     super(props);
-    // this.state = {
-    //   modalShow: false,
-    //   // startDate: "",
-    //   // startTime: "",
-    //   // endDate: "",
-    //   // endTime: ""
-    // }
-
 
     BigCalendar.momentLocalizer(moment);
-    this.ZOOM_API_KEY = 'WZ8d3cpAR3qx1cPD1Pdj6g';
-    this.ZOOM_REDIRECT_URL = 'http://localhost:3000/calendar';
 
   }
   handleItemClick = async (event, name) => {
@@ -44,21 +34,22 @@ class Calender extends Component {
   }
 
   getZoomData = (event) => {
-    let code = 'OwVw1la5wY_q9g5YHL1QTaI65Mqg7L2Wg';
-    let email = 'pandya.d@northeastern.edu'
-    // code = code.substring(6,code.length);
-    console.log(code);
-    fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${code}`,
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*'
-      }
-    }).then(response => {
-      console.log('response -->', response)
-    }
-    ).catch(console.log('error'));
+    // let code = 'mtDy0FxCoE_q9g5YHL1QTaI65Mqg7L2Wg';
+    // let email = 'pandya.d@northeastern.edu'
+    // let b = this.ZOOM_API_KEY + ":" + this.ZOOM_API_SECRET
+    // // code = code.substring(6,code.length);
+    // console.log(code);
+    // fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
+    //   method: "GET",
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     "Content-Type": "application/json",
+    //     'Access-Control-Allow-Origin': '*'
+    //   }
+    // }).then(response => {
+    //   console.log('response -->', response)
+    // }
+    // ).catch(console.log('error'));
 
   }
 
@@ -91,7 +82,7 @@ class Calender extends Component {
     return (
 
       <div ref={this.myRef} {...this.props} style={{ height: 600 }}>
-        {/* <button
+        <button
           onClick={(e) => this.handleItemClick(e, 'sign-in')}
         >
           sign-in
@@ -104,7 +95,7 @@ class Calender extends Component {
           onClick={(e) => this.getZoomData(e)}
         >
           Zoom
-              </button> */}
+              </button>
 
 
         <EventForm show={this.props.show}
