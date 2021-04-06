@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.get("/auth",
-            passport.authenticate('google', { scope: ['profile', 'email'] })
+            passport.authenticate('google', { scope: ['profile', 'email','https://www.googleapis.com/auth/calendar'] })
 );
 
 router.get("/auth/error", (req, res) => res.send('Unknown Error'));
