@@ -1,8 +1,5 @@
-import loginRouter from './login.route'
-
 export default (app) => {
   
-  app.use('/', loginRouter);
 
   // If response is 404 then return folling message 
   app.use(function (req,res,next){

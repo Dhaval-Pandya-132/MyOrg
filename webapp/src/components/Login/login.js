@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
-import { refreshTokenSetup } from '../../utils/refreshtoken';
+import { refreshTokenSetup } from '../../utils/refreshToken';
 import GoogleConfig from './../../apiGoogleconfig';
 
 const clientId = GoogleConfig.clientId;
