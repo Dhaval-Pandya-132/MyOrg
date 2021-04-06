@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import events from '../events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
-import ApiCalendar from 'react-google-calendar-api'
+// import ApiCalendar from 'react-google-calendar-api'
 import EventForm from '../EventsForm/EventForm'
 import {
   showAndHideModal
@@ -20,17 +20,17 @@ class Calender extends Component {
 
   }
   handleItemClick = async (event, name) => {
-    if (name === 'sign-in') {
-      ApiCalendar.handleAuthClick();
-      const rep = await ApiCalendar.getBasicUserProfile();
-      if (ApiCalendar.sign)
-        ApiCalendar.listUpcomingEvents(10).then(result => {
-          console.log(result);
-        });
-      console.log('here', rep);
-    } else if (name === 'sign-out') {
-      ApiCalendar.handleSignoutClick();
-    }
+    // if (name === 'sign-in') {
+    //   ApiCalendar.handleAuthClick();
+    //   const rep = await ApiCalendar.getBasicUserProfile();
+    //   if (ApiCalendar.sign)
+    //     ApiCalendar.listUpcomingEvents(10).then(result => {
+    //       console.log(result);
+    //     });
+    //   console.log('here', rep);
+    // } else if (name === 'sign-out') {
+    //   ApiCalendar.handleSignoutClick();
+    // }
   }
 
   getZoomData = (event) => {

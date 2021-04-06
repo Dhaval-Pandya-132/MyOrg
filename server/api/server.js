@@ -1,9 +1,6 @@
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import cookieSession from 'cookie-session';
-import passport from 'passport';
-require('./services/passport');
 import logger from 'morgan';
 import mongoose from 'mongoose'
 import routes from'./routes/';
@@ -20,13 +17,6 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Methods", "POST, GET, PUT");
     next();
 });  
-
-app.use(cookieSession({
-    name: 'google-auth-session',
-    keys: ['key1', 'key2']
-    }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(logger('dev'));
 app.use(express.json());
