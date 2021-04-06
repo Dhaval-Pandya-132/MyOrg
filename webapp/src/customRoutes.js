@@ -5,10 +5,14 @@ import {combineReducers, createStore} from 'redux';
 import App from './components/App';
 import Dashboard from './components/Dashboard/dashboard';
 import { reducer } from './reducers/initialState'
+import { eventFormReducer } from './reducers/eventFormModalState'
+import { calendarReducer } from './reducers/calendarState'
+import Calender from './components/Calendar/Calendar'
 
 
 const reducers = combineReducers({
-    reducer
+    eventFormReducer,
+    calendarReducer
 });
 
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__
@@ -21,11 +25,13 @@ class CustomRoutes extends React.Component {
             <Provider store={store}>
                 <Router>
                     <Switch>
+
                         <Route path="/signup" component={App} exact/>
                         {/* <Route path="/" exact>
                             <Redirect to="/signup"/>
                         </Route> */}
                         <Route path="/dashboard" component={Dashboard} exact></Route>
+                        <Route path="/calendar" component={Calender} />
                     </Switch>
                 </Router>
             </Provider>
