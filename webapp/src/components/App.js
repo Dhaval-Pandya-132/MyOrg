@@ -2,13 +2,15 @@ import React from 'react';
 import './App.scss';
 import Login from './Login/Login';
 
+
 class App extends React.Component {
 
   render(){
+    console.log(this.props);
     return(
       <div>
         Hello
-        <Login></Login>
+        <Login {...this.props}></Login>
       </div>
     );
   }

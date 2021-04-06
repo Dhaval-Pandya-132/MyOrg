@@ -3,6 +3,7 @@ import {Provider} from 'react-redux';
 import {BrowserRouter as Router, Redirect, Route, Switch,} from "react-router-dom";
 import {combineReducers, createStore} from 'redux';
 import App from './components/App';
+import Dashboard from './components/Dashboard/dashboard';
 import { reducer } from './reducers/initialState'
 import { eventFormReducer } from './reducers/eventFormModalState'
 import { calendarReducer } from './reducers/calendarState'
@@ -24,11 +25,13 @@ class CustomRoutes extends React.Component {
             <Provider store={store}>
                 <Router>
                     <Switch>
-                        <Route path="/signup" component={App} exact />
+
+                        <Route path="/signup" component={App} exact/>
+                        {/* <Route path="/" exact>
+                            <Redirect to="/signup"/>
+                        </Route> */}
+                        <Route path="/dashboard" component={Dashboard} exact></Route>
                         <Route path="/calendar" component={Calender} />
-                        <Route path="/">
-                            <Redirect to="/signup" />
-                        </Route>
                     </Switch>
                 </Router>
             </Provider>
