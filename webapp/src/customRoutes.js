@@ -8,6 +8,7 @@ import { reducer } from './reducers/initialState'
 import { eventFormReducer } from './reducers/eventFormModalState'
 import { calendarReducer } from './reducers/calendarState'
 import Calender from './components/Calendar/Calendar'
+import LandingPage from './components/Web-Chat-Component/LandingPage';
 
 
 const reducers = combineReducers({
@@ -32,6 +33,7 @@ class CustomRoutes extends React.Component {
                         </Route>
                         <Route path="/dashboard" component={Dashboard} exact></Route>
                         <Route path="/calendar" component={Calender} />
+                        <Route path="/messages" component={LandingPage} />
                     </Switch>
                 </Router>
             </Provider>
