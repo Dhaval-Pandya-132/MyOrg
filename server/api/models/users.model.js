@@ -9,14 +9,41 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String
     },
+    googleID: {
+      type: number,
+      required: "googleID"
+    },
+    photo: {
+      type: String
+    },
+    phoneNumber: {
+      type: String
+    },
+    address: {
+      type: String
+    },
+    orgID: {
+      type: number
+    },
+    role: {
+      type: String,
+      required: "role"
+    },
+    managerName: {
+      type: String,
+      required: "managerName"
+    },
     createdDate: {
       type: Date,
+      default:Date.now,
       required:"Created Date is required"
     },
     lastModifiedDate: {
       type: Date,
-      default:Date.now
     },
+    lastSignedDate: {
+      type: Date
+    }
   },
   {
     versionKey: false,
