@@ -9,7 +9,7 @@ class App extends React.Component {
     console.log(this.props);
     return(
       <div>
-        Hello
+        
         <Login {...this.props}></Login>
       </div>
     );
