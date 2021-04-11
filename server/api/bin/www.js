@@ -95,7 +95,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
 
-  console.log(bind)
+//  console.log(bind)
   debug('Listening on ' + bind);
 }
 
@@ -108,7 +108,7 @@ io.on('connection', socket => {
   socket.join(id)
 
   socket.on('send-message', ({ recipients, text}) => {
-    console.log("HERE")
+  //  console.log("HERE")
     recipients.forEach(recipient => {
       const newRecipients = recipients.filter(r => r !== recipient)
       newRecipients.push(id)
