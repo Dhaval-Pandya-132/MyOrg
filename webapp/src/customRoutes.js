@@ -39,10 +39,7 @@ function CustomRoutes() {
                                 </Switch>  
                             :   <div>
                                     <Route path="/signup" component={App} />
-                                    <Route path="/" exact>
-                                        <Redirect to="/signup"/>
-                                    </Route>
-                                    <Redirect to="/signup" />
+                                    <Redirect to="/signup"/>
                                 </div>
                         }
                     </Router>

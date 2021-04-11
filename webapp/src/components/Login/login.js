@@ -27,7 +27,7 @@ function Login(props) {
     <div>
       <GoogleLogin
         clientId={clientId}
-        buttonText="Login"
+        buttonText="Sign In with Google"
         scope= {'profile email https://www.googleapis.com/auth/calendar'}
         onSuccess={onSuccess}
         onFailure={onFailure}
