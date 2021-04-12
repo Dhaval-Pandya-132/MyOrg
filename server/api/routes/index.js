@@ -1,5 +1,8 @@
+import applicationRoutes from './application.route';
+
 export default (app) => {
-  
+
+  app.use('/',applicationRoutes);
 
   // If response is 404 then return folling message 
   app.use(function (req,res,next){
