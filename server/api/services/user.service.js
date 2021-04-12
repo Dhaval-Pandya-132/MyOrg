@@ -5,4 +5,15 @@ const search = (param) => {
     return promise;
 }
 
-export default { search };
+const test = () => {
+    const promise = {
+        message:"Authenticate"
+    }
+    return promise;
+}
+
+
+export default {
+     search: search,
+     test: test
+    };

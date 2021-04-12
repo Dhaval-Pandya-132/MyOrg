@@ -14,8 +14,26 @@ function Login(props) {
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res);
     refreshTokenSetup(res);
-    Cookies.set('accessToken', res.accessToken); 
+    Cookies.set('tokenId', res.tokenId); 
     setIsAuthenticated(true);
+
+    fetch('http://localhost:8081/test/', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'tokenId': res.tokenId
+    },
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
+
+
     props.history.push("dashboard");
   };
 

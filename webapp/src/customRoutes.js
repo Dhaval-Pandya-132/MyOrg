@@ -23,7 +23,7 @@ const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__
 
 function CustomRoutes() {
     
-    const token = Cookie.get('accessToken');
+    const token = Cookie.get('tokenId');
     const [isAuthenticated, setIsAuthenticated] = useState(!!token);
 
         return (

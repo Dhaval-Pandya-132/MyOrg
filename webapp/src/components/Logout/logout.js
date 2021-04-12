@@ -13,7 +13,7 @@ function Logout(props) {
 
   const onSuccess = () => {
     console.log('Logout made successfully');
-    Cookies.remove('accessToken');
+    Cookies.remove('tokenId');
     setIsAuthenticated(false);
     props.history.push("signup");
   };

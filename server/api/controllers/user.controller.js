@@ -1,5 +1,12 @@
 import userService from "../services/user.service";
 
+const test = (request, response) => {
+  const promise = userService.test();
+    response.status(200);
+     response.json(promise);
+};
+
+
 const getUsers = (request, response) => {
   const promise = userService.search();
   promise.then((users) => {
@@ -8,4 +15,7 @@ const getUsers = (request, response) => {
   });
 };
 
-export default {getUsers}
+export default {
+      getUsers: getUsers, 
+      test: test 
+}

@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       type: String
     },
     googleID: {
-      type: number,
+      type: String,
       required: "googleID"
     },
     photo: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
       type: String
     },
     orgID: {
-      type: number
+      type: String
     },
     role: {
       type: String,
