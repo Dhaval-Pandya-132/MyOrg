@@ -16,9 +16,17 @@ const gooleAuth = async (request, response, next) => {
             idToken: token,
             audience: clientId,
         });
-
+        
         const payload = ticket.getPayload();
-        request.userPayload = payload;
+      
+        const {sub, email, name, picture} = payload;
+        const userPayload = {
+            googleID: sub,
+            email: email,
+            userName: name,
+            picture: picture
+        }
+        request.userPayload =  userPayload;
         next();
 
     }catch(error){
