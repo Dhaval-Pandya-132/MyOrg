@@ -5,11 +5,13 @@ import Form from 'react-bootstrap/Form';
 import moment from 'moment';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Cookie from "js-cookie";
 import { connect } from "react-redux";
 import { EVENTFORM_INIT_STATE } from '../constants'
 import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
 import { addNewEvent } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
+import eventService from '../../services/events.service'
 
 
 class EventForm extends React.Component {
@@ -31,6 +33,10 @@ class EventForm extends React.Component {
                 ...this.state.formData,
                 ...this.props.dateRange
             }
+            let tokenId = Cookie.get('tokenId');
+            eventService
+                .addEvent(tokenId, formData)
+                .then(response => console.log('inserted new event to db', response));
             this.props.addNewEvent(formData);
             this.clearState();
             return;

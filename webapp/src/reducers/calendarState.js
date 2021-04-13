@@ -13,7 +13,9 @@ export const calendarReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case GET_ALL_EVENTS:
-            return state
+            return {
+                ...state, eventList: action.payload
+            }
         case ADD_NEW_EVENTS:
             let { eventList } = { ...state };
             eventList.push(action.payload);

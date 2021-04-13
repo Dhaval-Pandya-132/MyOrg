@@ -4,12 +4,17 @@ import { connect } from 'react-redux';
 import events from '../events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
-// import ApiCalendar from 'react-google-calendar-api'
+import Cookie from "js-cookie";
 import EventForm from '../EventsForm/EventForm'
 import {
   showAndHideModal
   , updateDateRange
 } from '../../actions/eventFormModalActions'
+import { getAllEvents } from '../../actions/calendarActions'
+import eventService from '../../services/events.service'
+import utils from '../../utils/utils'
+
+
 
 class Calender extends Component {
 
@@ -19,6 +24,16 @@ class Calender extends Component {
     BigCalendar.momentLocalizer(moment);
 
   }
+
+  componentDidMount() {
+    const tokenId = Cookie.get('tokenId');
+    eventService.getAllEvents(tokenId).then(eventList => {
+      this.props.getAllEvents(eventList);
+    })
+
+  }
+
+
   handleItemClick = async (event, name) => {
     // if (name === 'sign-in') {
     //   ApiCalendar.handleAuthClick();
@@ -66,9 +81,8 @@ class Calender extends Component {
 
       return {
         "title": event.summary,
-
-        "start": new Date(event.start.date + ' ' + event.start.time),
-        "end": new Date(event.end.date + ' ' + event.end.time),
+        "start": new Date(utils.formatDate(new Date(event.start.date)) + ' ' + event.start.time),
+        "end": new Date(utils.formatDate(new Date(event.end.date)) + ' ' + event.end.time),
         "desc": event.description
 
       }
@@ -82,22 +96,6 @@ class Calender extends Component {
     return (
 
       <div ref={this.myRef} {...this.props} style={{ height: 600 }}>
-        <button
-          onClick={(e) => this.handleItemClick(e, 'sign-in')}
-        >
-          sign-in
-              </button>
-
-        <a href={`https://zoom.us/oauth/authorize?response_type=code&client_id=${this.ZOOM_API_KEY}&redirect_uri=${this.ZOOM_REDIRECT_URL}`}>
-          Connect Zoom
-</a>
-        <button
-          onClick={(e) => this.getZoomData(e)}
-        >
-          Zoom
-              </button>
-
-
         <EventForm show={this.props.show}
           animation={false}
           backdrop={false}
@@ -150,7 +148,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setModalShow: (show) => showAndHideModal(dispatch, show),
-  updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange)
+  updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
+  getAllEvents: (eventList) => getAllEvents(dispatch, eventList)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calender);
