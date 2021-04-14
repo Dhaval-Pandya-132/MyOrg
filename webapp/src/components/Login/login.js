@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { refreshTokenSetup } from '../../utils/refreshToken';
 import GoogleConfig from './../../apiGoogleconfig';
@@ -10,6 +10,7 @@ const clientId = GoogleConfig.clientId;
 function Login(props) {
 
   const { setIsAuthenticated } = useContext(UserContext);
+  const [orgID, setOrgID] = useState('');
 
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res);
@@ -17,7 +18,8 @@ function Login(props) {
     Cookies.set('tokenId', res.tokenId); 
     setIsAuthenticated(true);
 
-    fetch('http://localhost:8081/test/', {
+    console.log('orgID',orgID);
+    fetch('http://localhost:8081/login/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -43,6 +45,9 @@ function Login(props) {
 
   return (
     <div>
+
+      <input type="text" name="orgID" value={orgID}
+          onChange={(e) => { setOrgID(e.target.value) }}placeholder="Organization ID" required/><br/><br/>
       <GoogleLogin
         clientId={clientId}
         buttonText="Sign In with Google"

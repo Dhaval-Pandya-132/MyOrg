@@ -1,9 +1,18 @@
 import userService from "../services/user.service";
+import 'babel-polyfill';
 
 const test = (request, response) => {
   const promise = userService.test();
     response.status(200);
      response.json(promise);
+};
+
+
+const login = async (request, response) => {
+  const user = request.userPayload;
+  const promise = await userService.login(user);
+    response.status(200);
+    response.json(promise);
 };
 
 
@@ -15,7 +24,18 @@ const getUsers = (request, response) => {
   });
 };
 
+const getUser = (request, response) => {
+  const googleID = request.params.googleID;
+  const promise = userService.user(googleID);
+  promise.then((user) => {
+    response.status(200);
+    response.json(user);
+  });
+};
+
 export default {
-      getUsers: getUsers, 
+      getUsers: getUsers,
+      login: login, 
+      getUser: getUser,
       test: test 
 }

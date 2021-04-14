@@ -31,7 +31,6 @@ const gooleAuth = async (request, response, next) => {
 
     }catch(error){
         console.log("Verification failed");
-        console.log(error);
         return response.status(401).json({
             message: 'Auth failed'
         });
