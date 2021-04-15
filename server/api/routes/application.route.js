@@ -11,7 +11,7 @@ router.route('/test')
 router.route('/login')
     .get(checkAuth, userController.login);
 
-router.route('/user:googleID')
+router.route('/user')
     .get(checkAuth, userController.getUser);
 
 router.route('/')

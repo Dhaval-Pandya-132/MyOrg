@@ -25,7 +25,7 @@ const getUsers = (request, response) => {
 };
 
 const getUser = (request, response) => {
-  const googleID = request.params.googleID;
+  const googleID = request.userPayload.googleID;
   const promise = userService.user(googleID);
   promise.then((user) => {
     response.status(200);
