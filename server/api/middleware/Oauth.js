@@ -2,8 +2,8 @@ import { OAuth2Client } from 'google-auth-library';
 import 'babel-polyfill';
 
 
-//const clientId = "259512103532-cvvunkt98fmil35ppucov9iu8lcf3mgl.apps.googleusercontent.com";
-const clientId = "266965666446-bn9hn1tlljqi0hpk0lskcm0cqmvfam2d.apps.googleusercontent.com";
+const clientId = "259512103532-cvvunkt98fmil35ppucov9iu8lcf3mgl.apps.googleusercontent.com";
+//const clientId = "266965666446-bn9hn1tlljqi0hpk0lskcm0cqmvfam2d.apps.googleusercontent.com";
 
 
 const client = new OAuth2Client(clientId);

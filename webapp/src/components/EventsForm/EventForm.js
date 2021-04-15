@@ -6,8 +6,11 @@ import moment from 'moment';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Cookie from "js-cookie";
+import Select from 'react-select'
+import { CirclePicker } from 'react-color'
+import { v4 as uuidv4 } from 'uuid'
 import { connect } from "react-redux";
-import { EVENTFORM_INIT_STATE } from '../constants'
+import { EVENTFORM_INIT_STATE, COLOR_LIST } from '../constants'
 import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
 import { addNewEvent } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
@@ -15,29 +18,81 @@ import eventService from '../../services/events.service'
 
 
 class EventForm extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             formData: { ...EVENTFORM_INIT_STATE },
-            errorList: []
+            errorList: [],
+            userList: [
+                { value: 'dhavalpandya132@gmail.com', label: 'dhavalpandya132@gmail.com' },
+                { value: 'pandya.d@northeastern.edu', label: 'pandya.d@northeastern.edu' },
+                { value: 'dhavalpandya296@gmail.com', label: 'dhavalpandya296@gmail.com' }
+
+            ]
         }
     }
 
 
-    save = (event) => {
+    save = async (event) => {
 
         if (this.validateForm()) {
             // save data and clear state
+            let dateRange = { ...this.props.dateRange }
+            let attendees = this.state.formData.attendees.map(object => {
+                return { email: object.value }
+            })
             let formData = {
                 ...this.state.formData,
-                ...this.props.dateRange
+                start: {
+                    dateTime: new Date(dateRange.start.date + ' ' + dateRange.start.time).toJSON(),
+                    timeZone: "America/New_York"
+                },
+                end: {
+                    dateTime: new Date(dateRange.end.date + ' ' + dateRange.end.time).toJSON(),
+                    timeZone: "America/New_York"
+                }
             }
+            // formData.status = "confirm";
+            // formData.attendees = attendees;
             let tokenId = Cookie.get('tokenId');
+            let accessToken = Cookie.get("accessToken")
+            let eventObject = {
+                ...formData
+                , attendees: attendees
+            }
+
+            console.log("eventObject -->", eventObject);
+            const confData = {
+                conferenceData: {
+                    createRequest: {
+                        requestId: uuidv4(),
+                        conferenceSolutionKey: {
+                            type: "hangoutsMeet"
+                        }
+                    }
+                }
+            }
+
+            const outEvent = await eventService
+                .addNewGoogleCalendarEvent(tokenId
+                    , accessToken
+                    , eventObject.addGoogleHangoutMeeting ? {
+                        ...eventObject, ...confData
+                    } : eventObject);
+            // eventService
+            //     .addNewGoogleCalendarEvent(tokenId
+            //         , accessToken
+            //         , eventObject.addGoogleHangoutMeeting ? {
+            //             ...eventObject, ...confData
+            //         } : eventObject)
+            //     .then(event => {
+            //         this.props.addNewEvent({ ...event, bgColor: eventObject.bgColor });
+            //     });
+            this.props.addNewEvent({ ...outEvent, eventId: outEvent.id, bgColor: eventObject.bgColor });
             eventService
-                .addEvent(tokenId, formData)
+                .addEvent(tokenId, { ...outEvent, eventId: outEvent.id, bgColor: eventObject.bgColor })
                 .then(response => console.log('inserted new event to db', response));
-            this.props.addNewEvent(formData);
+
             this.clearState();
             return;
         }
@@ -80,14 +135,29 @@ class EventForm extends React.Component {
     clearState = () => {
         this.setState({
             formData: { ...EVENTFORM_INIT_STATE },
-            errorList: []
+            errorList: [],
+            colorList: []
         });
         this.props.setModalShow(false);
     }
 
+    onColorChange = (event) => {
+        this.setState({
+            formData:
+                { ...this.state.formData, bgColor: event.hex }
+        });
+    }
+
+    onSelectChange = (event) => {
+        console.log("select change", event);
+        this.setState({
+            formData:
+                { ...this.state.formData, attendees: event }
+        });
+    }
 
     onChangeEvent = (event) => {
-        // console.log("Event", event);
+        console.log("Event", event);
         let dateRange = {}
         switch (event.target.id) {
             case 'title':
@@ -125,10 +195,16 @@ class EventForm extends React.Component {
                 dateRange.end.time = event.target.value;
                 this.props.updateDateRange(dateRange);
                 break;
-            case 'attendees':
+            case 'location':
                 this.setState({
                     formData:
-                        { ...this.state.formData, attendees: event.target.value }
+                        { ...this.state.formData, location: event.target.value }
+                });
+                break;
+            case 'chbGoogleHangout':
+                this.setState({
+                    formData:
+                        { ...this.state.formData, addGoogleHangoutMeeting: event.target.checked }
                 });
                 break;
             default:
@@ -182,6 +258,16 @@ class EventForm extends React.Component {
                             /></Col>
                         </Form.Group>
                         <Form.Group as={Row} >
+                            <Col sm={2}>  <Form.Label>Location</Form.Label></Col>
+                            <Col sm={10}>  <Form.Control
+                                id="location"
+                                type="text"
+                                value={localFormData.location}
+                                placeholder="Location"
+                                onChange={(event) => { this.onChangeEvent(event) }}
+                            /></Col>
+                        </Form.Group>
+                        <Form.Group as={Row} >
                             <Col sm={2}>
                                 <Form.Label>Start Date and Time</Form.Label>
                             </Col>
@@ -223,14 +309,45 @@ class EventForm extends React.Component {
                         </Form.Group>
                         <Form.Group as={Row}>
                             <Col sm={2}>  <Form.Label>Attendees</Form.Label></Col>
-                            <Col sm={10}> <Form.Control
-                                id="attendees"
-                                onChange={(event) => {
-                                    this.onChangeEvent(event);
-                                }}
-                                type="text"
-                                value={localFormData.attendees}
-                                placeholder="Add Email Address" /></Col>
+                            <Col sm={10}>
+                                <Select
+                                    value={localFormData.attendees}
+                                    id="attendees"
+                                    options={this.state.userList}
+                                    isMulti={true}
+                                    onChange={(event) => {
+                                        this.onSelectChange(event);
+                                    }}
+                                    placeholder="Add Email Address"
+                                >
+
+                                </Select>
+
+                                {/* <Form.Control
+                                    id="attendees"
+                                    onChange={(event) => {
+                                        this.onChangeEvent(event);
+                                    }}
+                                    type="text"
+                                    value={localFormData.attendees}
+                                    placeholder="Add Email Address" /> */}
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row}>
+                            <Col sm={2}>
+                                <Form.Label>Add Google Hangout</Form.Label></Col>
+                            <Col sm={10}>
+                                <Form.Check id="chbGoogleHangout" type="checkbox"
+                                    onChange={event => { this.onChangeEvent(event) }} checked={localFormData.addGoogleHangoutMeeting} />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row}>
+                            <Col sm={2}><Form.Label>Pick Color</Form.Label> </Col>
+                            <Col sm={10}><CirclePicker
+                                colors={COLOR_LIST}
+                                onChange={(event) => { this.onColorChange(event) }}
+                            >
+                            </CirclePicker></Col>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

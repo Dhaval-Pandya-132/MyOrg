@@ -1,4 +1,7 @@
+import axios from 'axios'
 import eventModel from '../models/events.model';
+
+
 
 /**
  * Get All events
@@ -35,6 +38,40 @@ const deleteEvent = (id) => {
 }
 
 
+const getGoogleCalendarEvents = (accessToken, calendarId) => {
+
+    const endpoint = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`
+    const config = {
+        headers: {
+            'content-type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        },
+    }
+    return axios.get(endpoint, config);
+}
+
+const addGoogleCalendarEvent = (accessToken, calendarId, event) => {
+
+    const endpoint = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?sendUpdates=all&sendNotifications=true&conferenceDataVersion=1`
+    const config = {
+        headers: {
+            'content-type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        },
+
+    }
+    return axios.post(endpoint, event, config);
+}
 
 
-export default { getAllEvents, addNewEvent, updateEvent, deleteEvent }
+
+
+
+export default {
+    getAllEvents
+    , addNewEvent
+    , updateEvent
+    , deleteEvent
+    , getGoogleCalendarEvents
+    , addGoogleCalendarEvent
+}

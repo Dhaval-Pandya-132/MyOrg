@@ -12,8 +12,6 @@ import {
 } from '../../actions/eventFormModalActions'
 import { getAllEvents } from '../../actions/calendarActions'
 import eventService from '../../services/events.service'
-import utils from '../../utils/utils'
-
 
 
 class Calender extends Component {
@@ -28,8 +26,9 @@ class Calender extends Component {
   componentDidMount() {
     const tokenId = Cookie.get('tokenId');
     eventService.getAllEvents(tokenId).then(eventList => {
+      console.log("eventList", eventList)
       this.props.getAllEvents(eventList);
-    })
+    }).catch(() => this.props.history.push("/login"))
 
   }
 
@@ -80,11 +79,12 @@ class Calender extends Component {
     let eventsList = eventList.map(event => {
 
       return {
+        "eventId": event.eventId,
         "title": event.summary,
-        "start": new Date(utils.formatDate(new Date(event.start.date)) + ' ' + event.start.time),
-        "end": new Date(utils.formatDate(new Date(event.end.date)) + ' ' + event.end.time),
-        "desc": event.description
-
+        "start": new Date(event.start.dateTime.toString()),
+        "end": new Date(event.end.dateTime.toString()),
+        "desc": event.description,
+        "bgColor": event.bgColor
       }
     })
 
@@ -109,7 +109,7 @@ class Calender extends Component {
           popup={true}
           scrollToTime={new Date(1970, 1, 1, 6)}
           defaultDate={new Date()}
-          onSelectEvent={event => alert(event.title)}
+          onSelectEvent={event => { console.log("event", event); alert(event.title) }}
           onSelectSlot={(slotInfo) => {
             this.props.setModalShow(true);
             const dateRange = {

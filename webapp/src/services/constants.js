@@ -5,3 +5,4 @@ export const ADD_EVENT = `${SERVER_ENDPOINT}/event`
 export const UPDATE_EVENT = `${SERVER_ENDPOINT}/event`
 export const DELETE_EVENT = `${SERVER_ENDPOINT}/event`
 export const GET_ALL_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvents`
+export const ADD_NEW_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`

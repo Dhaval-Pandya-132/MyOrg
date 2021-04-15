@@ -44,11 +44,36 @@ const deleteEvent = (request, response) => {
 
 }
 
+const getGoogleCalendarEvents = (request, response) => {
+    const { accesstoken } = { ...request.headers };
+    // console.log("request.header", request.headers);
+    eventService
+        .getGoogleCalendarEvents(accesstoken, 'primary')
+        .then(res => {
+            response.status(200);
+            // console.log("res", res.data)
+            response.json(res.data);
+        }).catch(err => response.json(err))
+}
 
+const addGoogleCalendarEvent = (request, response) => {
+    const { accesstoken } = { ...request.headers };
+    const event = request.body;
+    console.log("event", event);
+    eventService
+        .addGoogleCalendarEvent(accesstoken, 'primary', event)
+        .then(res => {
+            response.status(201);
+            // console.log("res", res.data)
+            response.json(res.data);
+        }).catch(err => response.json(err))
+}
 
 export default {
     getEvents
     , insertEvent
     , updateEvent
     , deleteEvent
+    , getGoogleCalendarEvents
+    , addGoogleCalendarEvent
 }

@@ -9,31 +9,22 @@ const eventSchema = new mongoose.Schema(
         description: {
             type: String
         },
-        googleEventID: {
-            type: String
-        },
-        zoomMeetingID: {
+        location: {
             type: String
         },
         start: {
-            date: {
+            dateTime: {
                 type: Date
             },
-            time: {
-                type: String
-            },
-            timezone: {
+            timeZone: {
                 type: String
             }
         },
         end: {
-            date: {
+            dateTime: {
                 type: Date
             },
-            time: {
-                type: String
-            },
-            timezone: {
+            timeZone: {
                 type: String
             }
         },
@@ -42,9 +33,15 @@ const eventSchema = new mongoose.Schema(
             default: Date.now,
             required: "Created Date is required"
         },
-        lastModifiedDate: {
-            type: Date,
-        },
+        status: String,
+        htmlLink: String,
+        attendees: [],
+        eventId: String,
+        bgColor: String,
+        iCalUID: String,
+        reminders: {},
+        hangoutLink: String,
+        conferenceData: {},
         userId: {
             type: String
         }
