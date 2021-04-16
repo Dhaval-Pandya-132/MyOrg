@@ -4,7 +4,8 @@ import {
     , UPDATE_EVENT
     , DELETE_EVENT
     , GET_ALL_GOOGLE_EVENT
-    , ADD_NEW_GOOGLE_EVENT
+    , ADD_NEW_GOOGLE_EVENT,
+    DELETE_GOOGLE_EVENT
 } from './constants'
 
 
@@ -85,6 +86,19 @@ const addNewGoogleCalendarEvent = (tokenId, accessToken, event) => {
 }
 
 
+const deleteGoogleEvent = (eventId, accessToken, tokenId) => {
+    let init = {
+        method: 'DELETE',
+        headers: {
+            'content-type': 'application/json',
+            tokenId,
+            accessToken
+        }
+    };
+    return fetch(`${DELETE_GOOGLE_EVENT}/${eventId}`, init
+    ).then(response => response.json());
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     getAllEvents
@@ -93,4 +107,5 @@ export default {
     , deleteEvent
     , getAllGoogleCalendarEvents
     , addNewGoogleCalendarEvent
+    , deleteGoogleEvent
 };

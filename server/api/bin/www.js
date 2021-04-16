@@ -5,11 +5,11 @@
  */
 
 
- import app from '../server.js';
- import debugLib from 'debug'
- import http from 'http';
- import socketio from 'socket.io';
- const debug = debugLib('server:server');
+import app from '../server.js';
+import debugLib from 'debug'
+import http from 'http';
+import socketio from 'socket.io';
+const debug = debugLib('server:server');
 /**
  * Get port from environment and store in Express.
  */
@@ -26,8 +26,9 @@ const server = http.createServer(app);
 const io = require('socket.io')(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }});
+    methods: ["GET", "POST", "DELETE"]
+  }
+});
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -43,7 +44,7 @@ server.on('listening', onListening);
 
 function normalizePort(val) {
   const port = parseInt(val, 10);
- 
+
   if (isNaN(port)) {
     // named pipe
     return val;
@@ -95,7 +96,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
 
-//  console.log(bind)
+  //  console.log(bind)
   debug('Listening on ' + bind);
 }
 
@@ -107,8 +108,8 @@ io.on('connection', socket => {
 
   socket.join(id)
 
-  socket.on('send-message', ({ recipients, text}) => {
-  //  console.log("HERE")
+  socket.on('send-message', ({ recipients, text }) => {
+    //  console.log("HERE")
     recipients.forEach(recipient => {
       const newRecipients = recipients.filter(r => r !== recipient)
       newRecipients.push(id)

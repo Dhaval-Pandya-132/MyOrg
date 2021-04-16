@@ -12,10 +12,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { connect } from "react-redux";
 import { EVENTFORM_INIT_STATE, COLOR_LIST } from '../constants'
 import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
-import { addNewEvent } from '../../actions/calendarActions'
+import { addNewEvent, getAllEvents } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
 import eventService from '../../services/events.service'
-
+import List from './List'
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -79,23 +79,24 @@ class EventForm extends React.Component {
                     , eventObject.addGoogleHangoutMeeting ? {
                         ...eventObject, ...confData
                     } : eventObject);
-            // eventService
-            //     .addNewGoogleCalendarEvent(tokenId
-            //         , accessToken
-            //         , eventObject.addGoogleHangoutMeeting ? {
-            //             ...eventObject, ...confData
-            //         } : eventObject)
-            //     .then(event => {
-            //         this.props.addNewEvent({ ...event, bgColor: eventObject.bgColor });
-            //     });
             this.props.addNewEvent({ ...outEvent, eventId: outEvent.id, bgColor: eventObject.bgColor });
             eventService
                 .addEvent(tokenId, { ...outEvent, eventId: outEvent.id, bgColor: eventObject.bgColor })
                 .then(response => console.log('inserted new event to db', response));
-
             this.clearState();
             return;
         }
+    }
+
+    deleteEvent = async (eventId) => {
+        let tokenId = Cookie.get('tokenId');
+        let accessToken = Cookie.get("accessToken")
+        await eventService.deleteGoogleEvent(eventId, accessToken, tokenId);
+        await eventService.deleteEvent(eventId, tokenId);
+        let eventList = await eventService.getAllEvents(tokenId);
+        this.props.getAllEvents(eventList);
+        this.clearState();
+        return;
     }
 
     validateForm = () => {
@@ -220,8 +221,10 @@ class EventForm extends React.Component {
         let { errorList } = { ...this.state };
         let { dateRange } = { ...this.props };
         let localFormData = { ...this.state.formData }
-        return (
-            <Modal
+        let viewFormData = { ...this.props.selectedEvent }
+        let viewEvent = this.props.viewEvent;
+        let insertModel = () => {
+            return (<Modal
                 {...this.props}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
@@ -355,21 +358,101 @@ class EventForm extends React.Component {
                     <Button onClick={() => this.clearState()}>Close</Button>
                     <Button type="submit" onClick={(event) => this.save(event)}>Save</Button>
                 </Modal.Footer>
-            </Modal >
+            </Modal >);
+        }
+        let viewEventData = () => {
+            const googleMeet = () => {
 
-        );
+                if (viewFormData.hangoutLink !== "")
+                    return (<Form.Group as={Row} >
+                        < Col sm={2}> <Form.Label>Meeting </Form.Label></Col>
+                        <Col sm={10}> <a rel="noreferrer" target="_blank" href={viewFormData.hangoutLink}> Join Hangout Meeting</a> </Col>
+                    </Form.Group >)
+
+            }
+            return (
+                <Modal
+                    {...this.props}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            View Event : <b>{viewFormData.summary}</b>
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group as={Row} >
+                                <Col sm={2}>  <Form.Label>Description :</Form.Label></Col>
+                                <Col sm={10}>
+                                    <Form.Label>{viewFormData.description}</Form.Label>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} >
+                                <Col sm={2}>  <Form.Label>Location :</Form.Label></Col>
+                                <Col sm={10}> <Form.Label>{viewFormData.location}</Form.Label> </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} >
+                                <Col sm={2}>
+                                    <Form.Label>Start DateTime</Form.Label>
+                                </Col>
+                                <Col sm={10}>
+                                    <Form.Label>{new Date(viewFormData.start.dateTime.toString()).toString()}</Form.Label>
+                                </Col>
+
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col sm={2}>
+                                    <Form.Label>End DateTime</Form.Label>
+                                </Col>
+                                <Col sm={10}> <Form.Label>{new Date(viewFormData.end.dateTime.toString()).toString()}</Form.Label></Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col sm={2}>  <Form.Label>Attendees</Form.Label></Col>
+                                <Col sm={10}>
+                                    <List attendees={viewFormData.attendees}></List>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Col sm={2}>
+                                    <Form.Label>Meeting Status</Form.Label></Col>
+                                <Col sm={10}>
+                                    <Form.Label>{viewFormData.status}</Form.Label>
+                                </Col>
+                            </Form.Group>
+                            {googleMeet()}
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => this.clearState()}>Close</Button>
+                        <Button variant="danger" type="button" onClick={() => this.deleteEvent(viewFormData.eventId)}>Delete Event</Button>
+                    </Modal.Footer>
+                </Modal >);
+        }
+
+        if (viewEvent) {
+            return (viewEventData());
+        } else {
+            return (insertModel());
+        }
+
     }
 }
 
 const mapStateToProps = (state) => ({
     show: state.eventFormReducer.modalShow,
-    dateRange: state.eventFormReducer.dateRange
+    dateRange: state.eventFormReducer.dateRange,
+    selectedEvent: state.calendarReducer.selectedEvent
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setModalShow: (show) => showAndHideModal(dispatch, show),
     updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
-    addNewEvent: (event) => addNewEvent(dispatch, event)
+    addNewEvent: (event) => addNewEvent(dispatch, event),
+    getAllEvents: (eventList) => getAllEvents(dispatch, eventList)
 
 })
 

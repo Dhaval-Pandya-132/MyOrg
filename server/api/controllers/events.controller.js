@@ -34,7 +34,7 @@ const updateEvent = (request, response) => {
 }
 
 const deleteEvent = (request, response) => {
-    const id = request.params.id;
+    const id = request.params.eventId;
     eventService.deleteEvent(id).then(event => {
         response.status(200);
         response.json(event);
@@ -69,6 +69,19 @@ const addGoogleCalendarEvent = (request, response) => {
         }).catch(err => response.json(err))
 }
 
+const deleteGoogleEvent = (request, response) => {
+    const id = request.params.eventId;
+    const { accesstoken } = { ...request.headers };
+    eventService
+        .deleteGoogleCalendarEvent(accesstoken, 'primary', id)
+        .then(res => {
+            response.status(200);
+            response.json(res);
+        }).catch(error => response.json(error))
+}
+
+
+
 export default {
     getEvents
     , insertEvent
@@ -76,4 +89,5 @@ export default {
     , deleteEvent
     , getGoogleCalendarEvents
     , addGoogleCalendarEvent
+    , deleteGoogleEvent
 }

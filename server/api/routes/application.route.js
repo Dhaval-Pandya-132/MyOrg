@@ -15,7 +15,8 @@ router.route('/events')
 router.route('/event')
     .post(checkAuth, eventController.insertEvent);
 router.route('/event/:id')
-    .put(checkAuth, eventController.updateEvent)
+    .put(checkAuth, eventController.updateEvent);
+router.route('/event/:eventId')
     .delete(checkAuth, eventController.deleteEvent);
 
 //  Google calendar events 
@@ -24,5 +25,8 @@ router.route('/googleEvents')
     .get(checkAuth, eventController.getGoogleCalendarEvents);
 router.route('/googleEvent')
     .post(checkAuth, eventController.addGoogleCalendarEvent);
+router.route('/googleEvent/:eventId')
+    .delete(checkAuth, eventController.deleteGoogleEvent);
+
 
 export default router;

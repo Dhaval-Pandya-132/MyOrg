@@ -32,8 +32,8 @@ const updateEvent = (id, updatedVal) => {
     return promise;
 }
 
-const deleteEvent = (id) => {
-    const promise = eventModel.remove({ _id: id }).exec();
+const deleteEvent = (eventId) => {
+    const promise = eventModel.remove({ eventId: eventId }).exec();
     return promise;
 }
 
@@ -63,9 +63,18 @@ const addGoogleCalendarEvent = (accessToken, calendarId, event) => {
     return axios.post(endpoint, event, config);
 }
 
+const deleteGoogleCalendarEvent = (accessToken, calendarId, eventId) => {
 
+    const endpoint = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`
+    const config = {
+        headers: {
+            'content-type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        },
 
-
+    }
+    return axios.delete(endpoint, config);
+}
 
 export default {
     getAllEvents
@@ -74,4 +83,5 @@ export default {
     , deleteEvent
     , getGoogleCalendarEvents
     , addGoogleCalendarEvent
+    , deleteGoogleCalendarEvent
 }

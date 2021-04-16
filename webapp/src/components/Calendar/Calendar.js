@@ -10,7 +10,7 @@ import {
   showAndHideModal
   , updateDateRange
 } from '../../actions/eventFormModalActions'
-import { getAllEvents } from '../../actions/calendarActions'
+import { getAllEvents, selectEvent } from '../../actions/calendarActions'
 import eventService from '../../services/events.service'
 
 
@@ -18,7 +18,9 @@ class Calender extends Component {
 
   constructor(props) {
     super(props);
-
+    this.state = {
+      viewEvent: false
+    }
     BigCalendar.momentLocalizer(moment);
 
   }
@@ -32,45 +34,11 @@ class Calender extends Component {
 
   }
 
-
-  handleItemClick = async (event, name) => {
-    // if (name === 'sign-in') {
-    //   ApiCalendar.handleAuthClick();
-    //   const rep = await ApiCalendar.getBasicUserProfile();
-    //   if (ApiCalendar.sign)
-    //     ApiCalendar.listUpcomingEvents(10).then(result => {
-    //       console.log(result);
-    //     });
-    //   console.log('here', rep);
-    // } else if (name === 'sign-out') {
-    //   ApiCalendar.handleSignoutClick();
-    // }
+  viewEventHandler = (event) => {
+    this.setState({ viewEvent: true })
+    this.props.selectEvent({ eventId: event.eventId });
+    this.props.setModalShow(true);
   }
-
-  getZoomData = (event) => {
-    // let code = 'mtDy0FxCoE_q9g5YHL1QTaI65Mqg7L2Wg';
-    // let email = 'pandya.d@northeastern.edu'
-    // let b = this.ZOOM_API_KEY + ":" + this.ZOOM_API_SECRET
-    // // code = code.substring(6,code.length);
-    // console.log(code);
-    // fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     "Content-Type": "application/json",
-    //     'Access-Control-Allow-Origin': '*'
-    //   }
-    // }).then(response => {
-    //   console.log('response -->', response)
-    // }
-    // ).catch(console.log('error'));
-
-  }
-
-
-  // setModalShow = (modalShow) => {
-  //   this.setState({ modalShow });
-  // }
 
   render() {
     console.log("props", this.props);
@@ -89,6 +57,7 @@ class Calender extends Component {
     })
 
 
+
     console.log("eventsList", eventsList);
     console.log("event", events);
 
@@ -99,6 +68,7 @@ class Calender extends Component {
         <EventForm show={this.props.show}
           animation={false}
           backdrop={false}
+          viewEvent={this.state.viewEvent}
         />
         <BigCalendar
           selectable
@@ -109,9 +79,12 @@ class Calender extends Component {
           popup={true}
           scrollToTime={new Date(1970, 1, 1, 6)}
           defaultDate={new Date()}
-          onSelectEvent={event => { console.log("event", event); alert(event.title) }}
+          onSelectEvent={event => {
+            this.viewEventHandler(event);
+          }}
           onSelectSlot={(slotInfo) => {
             this.props.setModalShow(true);
+            this.setState({ viewEvent: false })
             const dateRange = {
               start: {
                 date: moment(slotInfo.start).format("YYYY-MM-DD"),
@@ -149,7 +122,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setModalShow: (show) => showAndHideModal(dispatch, show),
   updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
-  getAllEvents: (eventList) => getAllEvents(dispatch, eventList)
+  getAllEvents: (eventList) => getAllEvents(dispatch, eventList),
+  selectEvent: (event) => selectEvent(dispatch, event)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calender);

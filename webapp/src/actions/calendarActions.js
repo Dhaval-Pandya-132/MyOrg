@@ -1,6 +1,6 @@
 export const GET_ALL_EVENTS = "GET_ALL_EVENTS";
 export const ADD_NEW_EVENTS = "ADD_NEW_EVENTS";
-export const UPDATE_NEW_EVENTS = "UPDATE_NEW_EVENTS";
+export const SELECT_EVENT = "SELECT_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
 
 
@@ -11,4 +11,8 @@ export const getAllEvents = (dispatch, payload) => {
 
 export const addNewEvent = (dispatch, payload) => {
     dispatch({ type: ADD_NEW_EVENTS, payload })
+}
+
+export const selectEvent = (dispatch, payload) => {
+    dispatch({ type: SELECT_EVENT, payload })
 }
