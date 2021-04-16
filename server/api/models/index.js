@@ -1,1 +1,2 @@
-import users from './users.model.js'
+import users from './users.model';
+import orgs from './organization.model';

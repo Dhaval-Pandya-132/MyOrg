@@ -26,17 +26,8 @@ const login = async (user) => {
     }
 }
 
-const test = () => {
-    const promise = {
-        message:"Authenticate"
-    }
-    return promise;
-}
-
-
 export default {
     search: search,
     login: login,
-    user: user,
-    test: test
+    user: user
 };

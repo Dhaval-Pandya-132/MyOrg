@@ -1,12 +1,6 @@
 import userService from "../services/user.service";
 import 'babel-polyfill';
 
-const test = (request, response) => {
-  const promise = userService.test();
-    response.status(200);
-     response.json(promise);
-};
-
 
 const login = async (request, response) => {
   const user = request.userPayload;
@@ -36,6 +30,5 @@ const getUser = (request, response) => {
 export default {
       getUsers: getUsers,
       login: login, 
-      getUser: getUser,
-      test: test 
+      getUser: getUser
 }
