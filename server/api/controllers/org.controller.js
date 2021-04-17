@@ -1,5 +1,5 @@
 import orgService from "../services/org.service";
-import 'babel-polyfill';
+import emailService from "../services/email.service";
 
 const getOrg = (request, response) => {
     const id = request.params.id;
@@ -12,11 +12,13 @@ const getOrg = (request, response) => {
 
 const saveOrg = (request, response) => {
     const org =  {...request.body};
-    console.log(org);
+
     const promise = orgService.save(org);
-    promise.then((org) => {
+    promise.then((organization) => {
+    emailService.email(organization.email,organization.orgID);
+    console.log('in save org');
     response.status(200);
-    response.json(org);
+    response.json(organization);
   }).catch(handleError(response)); 
   
 };
