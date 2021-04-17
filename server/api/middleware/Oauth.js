@@ -1,8 +1,9 @@
 import {OAuth2Client} from 'google-auth-library';
 import 'babel-polyfill';
+require('dotenv').config();
 
 
-const clientId = "259512103532-cvvunkt98fmil35ppucov9iu8lcf3mgl.apps.googleusercontent.com";
+const clientId = process.env.CLIENTID;
 
 const client = new OAuth2Client(clientId);
 

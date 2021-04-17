@@ -1,5 +1,4 @@
 import orgModel from '../models/organization.model';
-import 'babel-polyfill';
 
 const search = (id) => {
     const promise = orgModel.findOne({ orgID: id});

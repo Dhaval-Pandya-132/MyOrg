@@ -73,14 +73,27 @@ function Login(props) {
       }else{
         response.json().then(data => {
           console.log('Success:', data);
+          reset();
+          let x = document.getElementById("snackbar");
+          x.className = "show";
+          setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
         })}
       })
    
   }
 
+  const reset = () => {
+    setOrgID('');
+    setOrgName('');
+    setOrgEmail('');
+    setOrgPh('');
+    setOrgAddress('');
+}
+
 
   return (
     <div className='container'>
+      <div id="snackbar">Organisation ID sent your email</div>
       <div className="mb-2">
           <Button onClick={() => { setisRegister(false) }} className={`${isRegister ? 'btn-light' : 'btn-dark'} w-50 rounded-0`}>Login </Button>
           <Button onClick={() => { setisRegister(true) }} className={`${isRegister ? 'btn-dark' : 'btn-light'} w-50 rounded-0`}>Register Organisation</Button>
@@ -88,6 +101,7 @@ function Login(props) {
 
       {isRegister?
       (<div>
+        
           <Form onSubmit={orgRegistration}>
               <Form.Group>
                 <Form.Group controlId="orgName">

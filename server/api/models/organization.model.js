@@ -5,7 +5,7 @@ const orgSchema = new mongoose.Schema(
     orgName: {
         type: String,
         required:"Org name required",
-        unique: "Organization name should be unique"
+        index: {unique: true}
       }, 
     orgID: {
         type: String
@@ -13,7 +13,7 @@ const orgSchema = new mongoose.Schema(
     email: {
       type: String,
       required:"Org email required",
-      unique: "Organization email should be unique"
+      index: {unique: true}
     },
     phoneNumber: {
       type: String
@@ -31,12 +31,13 @@ const orgSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+// orgSchema.index({ orgName: 1, email: 1 }, { unique: true});
 orgSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
 orgSchema.set("toJSON", { virtual: true });
 
-const model = mongoose.model("organization", orgSchema);
+const orgModel = mongoose.model("organizations", orgSchema);
 
-export default model;
+export default orgModel;
