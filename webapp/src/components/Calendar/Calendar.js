@@ -62,9 +62,6 @@ class Calender extends Component {
       });
       this.props.getAllEvents(finalEventList);
     }
-
-
-
   }
 
   viewEventHandler = (event) => {
@@ -132,6 +129,7 @@ class Calender extends Component {
           popup={true}
           localizer={localizer}
           scrollToTime={new Date(1970, 1, 1, 6)}
+          onEventResize={(event) => this.onEventDropHandler(event)}
           defaultDate={new Date()}
           onSelectEvent={event => {
             this.viewEventHandler(event);
