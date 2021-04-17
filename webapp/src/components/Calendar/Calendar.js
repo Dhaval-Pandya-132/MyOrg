@@ -1,78 +1,114 @@
 import React, { Component } from 'react';
-import BigCalendar from 'react-big-calendar-like-google';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { connect } from 'react-redux';
 import events from '../events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
-// import ApiCalendar from 'react-google-calendar-api'
+import Cookie from "js-cookie";
 import EventForm from '../EventsForm/EventForm'
 import {
   showAndHideModal
   , updateDateRange
 } from '../../actions/eventFormModalActions'
+import { getAllEvents, selectEvent, updateEvent } from '../../actions/calendarActions'
+import eventService from '../../services/events.service'
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
+const localizer = momentLocalizer(moment);
+const BigCalendar = withDragAndDrop(Calendar);
 class Calender extends Component {
 
   constructor(props) {
     super(props);
-
-    BigCalendar.momentLocalizer(moment);
-
-  }
-  handleItemClick = async (event, name) => {
-    // if (name === 'sign-in') {
-    //   ApiCalendar.handleAuthClick();
-    //   const rep = await ApiCalendar.getBasicUserProfile();
-    //   if (ApiCalendar.sign)
-    //     ApiCalendar.listUpcomingEvents(10).then(result => {
-    //       console.log(result);
-    //     });
-    //   console.log('here', rep);
-    // } else if (name === 'sign-out') {
-    //   ApiCalendar.handleSignoutClick();
-    // }
-  }
-
-  getZoomData = (event) => {
-    // let code = 'mtDy0FxCoE_q9g5YHL1QTaI65Mqg7L2Wg';
-    // let email = 'pandya.d@northeastern.edu'
-    // let b = this.ZOOM_API_KEY + ":" + this.ZOOM_API_SECRET
-    // // code = code.substring(6,code.length);
-    // console.log(code);
-    // fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     "Content-Type": "application/json",
-    //     'Access-Control-Allow-Origin': '*'
-    //   }
-    // }).then(response => {
-    //   console.log('response -->', response)
-    // }
-    // ).catch(console.log('error'));
+    this.state = {
+      viewEvent: false
+    }
+    //  Calendar.momentLocalizer(moment);
 
   }
 
+  componentDidMount() {
+    this.syncCalendar();
+  }
 
-  // setModalShow = (modalShow) => {
-  //   this.setState({ modalShow });
-  // }
+  syncCalendar = async () => {
+    const tokenId = Cookie.get('tokenId');
+    const accessToken = Cookie.get('accessToken');
+    const eventList = await eventService.getAllEvents(tokenId);
+    const googleEventList = await eventService
+      .getAllGoogleCalendarEvents(tokenId, accessToken);
+    const { items } = { ...googleEventList }
+    console.log("googleEventList", googleEventList);
+    console.log("EventList", eventList);
+    if (items.length === eventList.length) {
+      this.props.getAllEvents(eventList);
+    } else {
+      let finalEventList = [];
+      items.forEach(async item => {
+        let isExist = false;
+        eventList.forEach(async event => {
+          if (item.id === event.eventId) {
+            isExist = true;
+            finalEventList.push(event);
+          }
+        });
+        if (!isExist) {
+          const eventResponse = await eventService
+            .addEvent(tokenId, { ...item, eventId: item.id });
+          finalEventList.push(eventResponse);
+        }
+      });
+      this.props.getAllEvents(finalEventList);
+    }
+
+
+
+  }
+
+  viewEventHandler = (event) => {
+    this.setState({ viewEvent: true })
+    this.props.selectEvent({ eventId: event.eventId });
+    this.props.setModalShow(true);
+  }
+
+  onEventDropHandler = async (event) => {
+    const tokenId = Cookie.get('tokenId');
+    const accessToken = Cookie.get('accessToken');
+    const eventObj = {
+      startDateTime: event.start,
+      endDateTime: event.end,
+      eventId: event.event.eventId
+    }
+    this.props.updateEvent(eventObj)
+    let { eventList } = { ...this.props };
+    let eventObject = eventList.filter(event => event.eventId === eventObj.eventId)[0];
+    console.log("onEventDrop eventObject", eventObject);
+    await eventService
+      .updateEvent(eventObject._id, tokenId, eventObject);
+    const resp = await eventService
+      .updateGoogleEvent(eventObject.eventId, accessToken, tokenId, eventObject)
+    console.log("onEventDrop", resp);
+
+  }
 
   render() {
     console.log("props", this.props);
     let { eventList } = { ...this.props };
 
-    let eventsList = eventList.map(event => {
+    let eventsList = eventList.filter(event => event.start !== undefined)
+      .map(event => {
+        return {
+          "eventId": event.eventId,
+          "title": event.summary,
+          "start": new Date(event.start.dateTime.toString()),
+          "end": new Date(event.end.dateTime.toString()),
+          "desc": event.description,
+          "color": event.bgColor
+        }
+      })
 
-      return {
-        "title": event.summary,
-
-        "start": new Date(event.start.date + ' ' + event.start.time),
-        "end": new Date(event.end.date + ' ' + event.end.time),
-        "desc": event.description
-
-      }
-    })
 
 
     console.log("eventsList", eventsList);
@@ -82,25 +118,10 @@ class Calender extends Component {
     return (
 
       <div ref={this.myRef} {...this.props} style={{ height: 600 }}>
-        <button
-          onClick={(e) => this.handleItemClick(e, 'sign-in')}
-        >
-          sign-in
-              </button>
-
-        <a href={`https://zoom.us/oauth/authorize?response_type=code&client_id=${this.ZOOM_API_KEY}&redirect_uri=${this.ZOOM_REDIRECT_URL}`}>
-          Connect Zoom
-</a>
-        <button
-          onClick={(e) => this.getZoomData(e)}
-        >
-          Zoom
-              </button>
-
-
         <EventForm show={this.props.show}
           animation={false}
           backdrop={false}
+          viewEvent={this.state.viewEvent}
         />
         <BigCalendar
           selectable
@@ -109,11 +130,16 @@ class Calender extends Component {
           onLeftMenu={() => { }}
           onClick={() => { }}
           popup={true}
+          localizer={localizer}
           scrollToTime={new Date(1970, 1, 1, 6)}
           defaultDate={new Date()}
-          onSelectEvent={event => alert(event.title)}
+          onSelectEvent={event => {
+            this.viewEventHandler(event);
+          }}
+          onEventDrop={(event) => { this.onEventDropHandler(event); }}
           onSelectSlot={(slotInfo) => {
             this.props.setModalShow(true);
+            this.setState({ viewEvent: false })
             const dateRange = {
               start: {
                 date: moment(slotInfo.start).format("YYYY-MM-DD"),
@@ -150,7 +176,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setModalShow: (show) => showAndHideModal(dispatch, show),
-  updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange)
+  updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
+  getAllEvents: (eventList) => getAllEvents(dispatch, eventList),
+  selectEvent: (event) => selectEvent(dispatch, event),
+  updateEvent: (event) => updateEvent(dispatch, event)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calender);

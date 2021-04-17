@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import GoogleConfig from './../../apiGoogleconfig';
 import Cookies from 'js-cookie';
@@ -14,6 +14,7 @@ function Logout(props) {
   const onSuccess = () => {
     console.log('Logout made successfully');
     Cookies.remove('tokenId');
+    Cookies.remove('accessToken');
     setIsAuthenticated(false);
     props.history.push("signup");
   };
@@ -23,7 +24,7 @@ function Logout(props) {
       <GoogleLogout
         clientId={clientId}
         buttonText="Logout"
-        scope= {'profile email https://www.googleapis.com/auth/calendar'}
+        scope={'profile email https://www.googleapis.com/auth/calendar'}
         onLogoutSuccess={onSuccess}
       ></GoogleLogout>
     </div>
