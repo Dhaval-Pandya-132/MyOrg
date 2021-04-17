@@ -10,8 +10,7 @@ const gooleAuth = async (request, response, next) => {
 
     try{
 
-        const token = request.headers.tokenid;
-    
+        let token = request.headers.tokenid;
         const ticket = await client.verifyIdToken({ 
             idToken: token,
             audience: clientId,

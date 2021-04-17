@@ -1,15 +1,18 @@
 import express from 'express';
 import userController from './../controllers/user.controller';
+import orgController from './../controllers/org.controller';
 import checkAuth from './../middleware/Oauth';
 
 const router = express.Router();
 
+router.route('/org/:id')
+    .get(orgController.getOrg)
 
-router.route('/test')
-    .get(checkAuth, userController.test);
+router.route('/org')
+    .post(orgController.saveOrg);
 
-router.route('/login')
-    .get(checkAuth, userController.login);
+router.route('/login/:id')
+    .post(checkAuth, userController.login);
 
 router.route('/user')
     .get(checkAuth, userController.getUser);
