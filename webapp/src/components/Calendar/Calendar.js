@@ -97,17 +97,17 @@ class Calender extends Component {
     console.log("props", this.props);
     let { eventList } = { ...this.props };
 
-    let eventsList = eventList.map(event => {
-
-      return {
-        "eventId": event.eventId,
-        "title": event.summary,
-        "start": new Date(event.start.dateTime.toString()),
-        "end": new Date(event.end.dateTime.toString()),
-        "desc": event.description,
-        "color": event.bgColor
-      }
-    })
+    let eventsList = eventList.filter(event => event.start !== undefined)
+      .map(event => {
+        return {
+          "eventId": event.eventId,
+          "title": event.summary,
+          "start": new Date(event.start.dateTime.toString()),
+          "end": new Date(event.end.dateTime.toString()),
+          "desc": event.description,
+          "color": event.bgColor
+        }
+      })
 
 
 
