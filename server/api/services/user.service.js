@@ -1,9 +1,9 @@
 import userModel from '../models/users.model';
 import 'babel-polyfill';
 
-const search = (param) => {
-    const promise = userModel.find(param).exec();
-    return promise;
+const search = async(id) => {
+  const promise = userModel.find({orgID: id}).exec();
+  return promise;
 }
 
 const user = (id) => {
@@ -12,7 +12,7 @@ const user = (id) => {
 }
 
 
-const login = async (user) => {
+const login = async (user,orgID) => {
     
     const existingUser = await userModel.findOne({googleID: user.googleID});
     if (existingUser) {
@@ -21,8 +21,8 @@ const login = async (user) => {
     } else {
         // adding new profile in db
         const { googleID, userName, email, picture} = user;
-        console.log('new user');
-        return new userModel({googleID,userName,email,picture}).save();
+        console.log('new user',orgID);
+        return new userModel({googleID,userName,email,picture,orgID}).save();
     }
 }
 

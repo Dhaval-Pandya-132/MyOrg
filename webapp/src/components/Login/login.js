@@ -27,12 +27,11 @@ function Login(props) {
       setIsAuthenticated(true);
 
       console.log('orgID',orgID);
-      fetch('http://localhost:8081/login/', {
+      fetch('http://localhost:8081/login/'+orgID, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'tokenId': res.tokenId,
-        'orgID': orgID
+        'tokenId': res.tokenId
       },
       })
       .then(response => response.json())

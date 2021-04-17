@@ -11,7 +11,7 @@ router.route('/org/:id')
 router.route('/org')
     .post(orgController.saveOrg);
 
-router.route('/login')
+router.route('/login/:id')
     .post(checkAuth, userController.login);
 
 router.route('/user')
