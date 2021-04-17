@@ -4,8 +4,9 @@ import {
     , UPDATE_EVENT
     , DELETE_EVENT
     , GET_ALL_GOOGLE_EVENT
-    , ADD_NEW_GOOGLE_EVENT,
-    DELETE_GOOGLE_EVENT
+    , ADD_NEW_GOOGLE_EVENT
+    , DELETE_GOOGLE_EVENT
+    , UPDATE_GOOGLE_EVENT
 } from './constants'
 
 
@@ -34,16 +35,16 @@ const addEvent = (tokenId, event) => {
 }
 
 
-const updateEvent = (eventId, tokenId, event) => {
+const updateEvent = (id, tokenId, updatedEvent) => {
     let init = {
         method: 'PUT',
         headers: {
             'content-type': 'application/json',
             tokenId
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify(updatedEvent)
     };
-    return fetch(`${UPDATE_EVENT}/${eventId}`, init
+    return fetch(`${UPDATE_EVENT}/${id}`, init
     ).then(response => response.json());
 }
 
@@ -99,6 +100,22 @@ const deleteGoogleEvent = (eventId, accessToken, tokenId) => {
     ).then(response => response.json());
 }
 
+
+const updateGoogleEvent = (eventId, accessToken, tokenId, event) => {
+    let init = {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json',
+            tokenId,
+            accessToken
+        },
+        body: JSON.stringify(event)
+    };
+    return fetch(`${UPDATE_GOOGLE_EVENT}/${eventId}`, init
+    ).then(response => response.json());
+}
+
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     getAllEvents
@@ -108,4 +125,5 @@ export default {
     , getAllGoogleCalendarEvents
     , addNewGoogleCalendarEvent
     , deleteGoogleEvent
+    , updateGoogleEvent
 };

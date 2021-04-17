@@ -7,10 +7,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Cookie from "js-cookie";
 import Select from 'react-select'
-import { CirclePicker } from 'react-color'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from "react-redux";
-import { EVENTFORM_INIT_STATE, COLOR_LIST } from '../constants'
+import { EVENTFORM_INIT_STATE } from '../constants'
 import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalActions'
 import { addNewEvent, getAllEvents } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
@@ -136,18 +135,17 @@ class EventForm extends React.Component {
     clearState = () => {
         this.setState({
             formData: { ...EVENTFORM_INIT_STATE },
-            errorList: [],
-            colorList: []
+            errorList: []
         });
         this.props.setModalShow(false);
     }
 
-    onColorChange = (event) => {
-        this.setState({
-            formData:
-                { ...this.state.formData, bgColor: event.hex }
-        });
-    }
+    // onColorChange = (event) => {
+    //     this.setState({
+    //         formData:
+    //             { ...this.state.formData, bgColor: event.hex }
+    //     });
+    // }
 
     onSelectChange = (event) => {
         console.log("select change", event);
@@ -325,15 +323,6 @@ class EventForm extends React.Component {
                                 >
 
                                 </Select>
-
-                                {/* <Form.Control
-                                    id="attendees"
-                                    onChange={(event) => {
-                                        this.onChangeEvent(event);
-                                    }}
-                                    type="text"
-                                    value={localFormData.attendees}
-                                    placeholder="Add Email Address" /> */}
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row}>
@@ -344,14 +333,14 @@ class EventForm extends React.Component {
                                     onChange={event => { this.onChangeEvent(event) }} checked={localFormData.addGoogleHangoutMeeting} />
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        {/* <Form.Group as={Row}>
                             <Col sm={2}><Form.Label>Pick Color</Form.Label> </Col>
                             <Col sm={10}><CirclePicker
                                 colors={COLOR_LIST}
                                 onChange={(event) => { this.onColorChange(event) }}
                             >
                             </CirclePicker></Col>
-                        </Form.Group>
+                        </Form.Group> */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

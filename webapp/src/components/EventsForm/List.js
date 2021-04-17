@@ -1,5 +1,5 @@
 const style = {
-    'list-style-type': 'none',
+    'listStyleType': 'none',
     'padding': '0px'
 }
 

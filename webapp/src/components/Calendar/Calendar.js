@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BigCalendar from 'react-big-calendar-like-google';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { connect } from 'react-redux';
 import events from '../events';
 import moment from 'moment';
@@ -10,10 +10,14 @@ import {
   showAndHideModal
   , updateDateRange
 } from '../../actions/eventFormModalActions'
-import { getAllEvents, selectEvent } from '../../actions/calendarActions'
+import { getAllEvents, selectEvent, updateEvent } from '../../actions/calendarActions'
 import eventService from '../../services/events.service'
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
-
+const localizer = momentLocalizer(moment);
+const BigCalendar = withDragAndDrop(Calendar);
 class Calender extends Component {
 
   constructor(props) {
@@ -21,16 +25,45 @@ class Calender extends Component {
     this.state = {
       viewEvent: false
     }
-    BigCalendar.momentLocalizer(moment);
+    //  Calendar.momentLocalizer(moment);
 
   }
 
   componentDidMount() {
+    this.syncCalendar();
+  }
+
+  syncCalendar = async () => {
     const tokenId = Cookie.get('tokenId');
-    eventService.getAllEvents(tokenId).then(eventList => {
-      console.log("eventList", eventList)
+    const accessToken = Cookie.get('accessToken');
+    const eventList = await eventService.getAllEvents(tokenId);
+    const googleEventList = await eventService
+      .getAllGoogleCalendarEvents(tokenId, accessToken);
+    const { items } = { ...googleEventList }
+    console.log("googleEventList", googleEventList);
+    console.log("EventList", eventList);
+    if (items.length === eventList.length) {
       this.props.getAllEvents(eventList);
-    }).catch(() => this.props.history.push("/login"))
+    } else {
+      let finalEventList = [];
+      items.forEach(async item => {
+        let isExist = false;
+        eventList.forEach(async event => {
+          if (item.id === event.eventId) {
+            isExist = true;
+            finalEventList.push(event);
+          }
+        });
+        if (!isExist) {
+          const eventResponse = await eventService
+            .addEvent(tokenId, { ...item, eventId: item.id });
+          finalEventList.push(eventResponse);
+        }
+      });
+      this.props.getAllEvents(finalEventList);
+    }
+
+
 
   }
 
@@ -38,6 +71,26 @@ class Calender extends Component {
     this.setState({ viewEvent: true })
     this.props.selectEvent({ eventId: event.eventId });
     this.props.setModalShow(true);
+  }
+
+  onEventDropHandler = async (event) => {
+    const tokenId = Cookie.get('tokenId');
+    const accessToken = Cookie.get('accessToken');
+    const eventObj = {
+      startDateTime: event.start,
+      endDateTime: event.end,
+      eventId: event.event.eventId
+    }
+    this.props.updateEvent(eventObj)
+    let { eventList } = { ...this.props };
+    let eventObject = eventList.filter(event => event.eventId === eventObj.eventId)[0];
+    console.log("onEventDrop eventObject", eventObject);
+    await eventService
+      .updateEvent(eventObject._id, tokenId, eventObject);
+    const resp = await eventService
+      .updateGoogleEvent(eventObject.eventId, accessToken, tokenId, eventObject)
+    console.log("onEventDrop", resp);
+
   }
 
   render() {
@@ -52,7 +105,7 @@ class Calender extends Component {
         "start": new Date(event.start.dateTime.toString()),
         "end": new Date(event.end.dateTime.toString()),
         "desc": event.description,
-        "bgColor": event.bgColor
+        "color": event.bgColor
       }
     })
 
@@ -77,11 +130,13 @@ class Calender extends Component {
           onLeftMenu={() => { }}
           onClick={() => { }}
           popup={true}
+          localizer={localizer}
           scrollToTime={new Date(1970, 1, 1, 6)}
           defaultDate={new Date()}
           onSelectEvent={event => {
             this.viewEventHandler(event);
           }}
+          onEventDrop={(event) => { this.onEventDropHandler(event); }}
           onSelectSlot={(slotInfo) => {
             this.props.setModalShow(true);
             this.setState({ viewEvent: false })
@@ -123,7 +178,8 @@ const mapDispatchToProps = (dispatch) => ({
   setModalShow: (show) => showAndHideModal(dispatch, show),
   updateDateRange: (dateRange) => updateDateRange(dispatch, dateRange),
   getAllEvents: (eventList) => getAllEvents(dispatch, eventList),
-  selectEvent: (event) => selectEvent(dispatch, event)
+  selectEvent: (event) => selectEvent(dispatch, event),
+  updateEvent: (event) => updateEvent(dispatch, event)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calender);

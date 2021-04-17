@@ -1,7 +1,8 @@
 import {
     GET_ALL_EVENTS,
     ADD_NEW_EVENTS,
-    SELECT_EVENT
+    SELECT_EVENT,
+    UPDATE_EVENT
 } from './../actions/calendarActions'
 
 
@@ -28,6 +29,28 @@ export const calendarReducer = (state = initialState, action) => {
                 event.eventId === action.payload.eventId);
             return {
                 ...state, selectedEvent: selectedEvent[0]
+            }
+        case UPDATE_EVENT:
+            let { startDateTime, endDateTime, eventId } = { ...action.payload };
+            let updatedEventList = state.eventList.map(event => {
+                if (event.eventId === eventId) {
+                    return {
+                        ...event,
+                        start: {
+                            ...event.start,
+                            dateTime: startDateTime
+                        },
+                        end: {
+                            ...event.end,
+                            dateTime: endDateTime
+                        },
+                    }
+                } else {
+                    return event;
+                }
+            });
+            return {
+                ...state, eventList: updatedEventList
             }
         default:
             return state;

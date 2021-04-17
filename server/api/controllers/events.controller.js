@@ -24,12 +24,16 @@ const insertEvent = (request, response) => {
 const updateEvent = (request, response) => {
     const id = request.params.id;
     const updatedEvent = { ...request.body };
+    console.log("update event 1", id);
+    console.log("update event 2", updatedEvent);
     eventService.updateEvent(id, updatedEvent).then(event => {
         response.status(200);
+        console.log("update event ", event);
         response.json(event);
-    }).catch(err =>
+    }).catch(err => {
+        console.log("update event error", err);
         response.json(err)
-    );
+    });
 
 }
 
@@ -80,6 +84,17 @@ const deleteGoogleEvent = (request, response) => {
         }).catch(error => response.json(error))
 }
 
+const updateGoogleCalendar = (request, response) => {
+    const id = request.params.eventId;
+    const { accesstoken } = { ...request.headers };
+    const updatedEvent = { ...request.body }
+    eventService
+        .updateGoogleCalendarEvent(accesstoken, 'primary', id, updatedEvent)
+        .then(res => {
+            response.status(200);
+            response.json(res);
+        }).catch(error => response.json(error))
+}
 
 
 export default {
@@ -90,4 +105,5 @@ export default {
     , getGoogleCalendarEvents
     , addGoogleCalendarEvent
     , deleteGoogleEvent
+    , updateGoogleCalendar
 }
