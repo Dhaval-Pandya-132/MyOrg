@@ -24,6 +24,7 @@ function Login(props) {
     console.log('Login Success: currentUser:', res);
     refreshTokenSetup(res);
     Cookies.set('tokenId', res.tokenId);
+    Cookies.set('accessToken', res.accessToken);
     setIsAuthenticated(true);
 
     console.log('orgID', orgID);
