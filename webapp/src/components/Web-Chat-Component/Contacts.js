@@ -9,8 +9,8 @@ export default function Contacts() {
     return (
         <ListGroup variant="flush">
             {contacts.map(contact => (
-                <ListGroup.Item key={contact.id}>
-                    {contact.name}
+                <ListGroup.Item key={contact.email}>
+                    {contact.userName}
                 </ListGroup.Item>
             ))}
         </ListGroup>

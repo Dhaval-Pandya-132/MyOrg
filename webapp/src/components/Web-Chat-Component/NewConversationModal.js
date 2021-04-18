@@ -11,8 +11,7 @@ export default function NewConversationModal({ closeModal }) {
     const { createConversation } = useConversations();
 
     function handleSubmit(e){
-        e.preventDefault()
-        
+        e.preventDefault()  
         createConversation(selectedContactIds)
         closeModal()
     }
@@ -35,12 +34,12 @@ export default function NewConversationModal({ closeModal }) {
         <Modal.Body>
             <Form onSubmit={handleSubmit}>
                 {contacts.map(contact => (
-                    <Form.Group controlId={contact.id} key={contact.id}>
-                        <Form.Check
+                    <Form.Group controlId={contact.email} key={contact.googleID}>
+                       <Form.Check
                             type="checkbox"
-                            value={ selectedContactIds.includes(contact.id) }
-                            label={contact.name}
-                            onChange={() => handleCheckboxChange(contact.id)}
+                            value={selectedContactIds.includes(contact.email) }
+                            label = {contact.userName}
+                            onChange={() => handleCheckboxChange(contact.email)}
                         />
                     </Form.Group>
                 ))}
