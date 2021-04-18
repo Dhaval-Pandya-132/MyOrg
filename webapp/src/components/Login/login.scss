@@ -1,3 +1,7 @@
+$white: #fff;
+$google-blue: #4285f4;
+$button-active-blue: #1669F2;
+
 .login-btn{
     background-color: rgb(255, 255, 255);
     display: inline-flex;
@@ -13,12 +17,13 @@
 }
 
 .container{
-  margin-top:20%;
+  padding-top:5%;
 }
 
 //login policy
 .login-policy{
     font-size: 15px;
+    color: white;
     margin-top: 1%;
 }
 
@@ -62,4 +67,59 @@
 @keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
+}
+
+
+
+.google-button {
+  height: 40px;
+  width:500px;
+  border-width: 0;
+  background: white;
+  color: #737373;
+  border-radius: 5px;
+  white-space: nowrap;
+  box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
+  transition-property: background-color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+  padding: 0;
+  
+  &:focus,
+  &:hover {
+    box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
+  }
+  
+  &:active {
+    background-color: #e5e5e5;
+    box-shadow: none;
+    transition-duration: 10ms;
+  }
+}
+    
+.google-button__icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 1px 0 8px 8px;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+.google-button__icon--plus {
+  width: 27px;
+}
+
+.google-button__text {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Roboto',arial,sans-serif;
+}
+
+.login-container{
+  width:500px;
+  padding-top:20px;
 }
