@@ -7,6 +7,7 @@ const clientId = process.env.CLIENTID;
 
 const client = new OAuth2Client(clientId);
 
+// calling google for geting user 
 const gooleAuth = async (request, response, next) => {
 
     try {
@@ -17,9 +18,11 @@ const gooleAuth = async (request, response, next) => {
             audience: clientId,
         });
 
+        // getting payload
         const payload = ticket.getPayload();
         console.log("payload --->", payload);
         const { sub, email, name, picture } = payload;
+        // adding userpayload to request
         const userPayload = {
             googleID: sub,
             email: email,

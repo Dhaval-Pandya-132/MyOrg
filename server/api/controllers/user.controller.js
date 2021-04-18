@@ -1,7 +1,7 @@
 import userService from "../services/user.service";
 import 'babel-polyfill';
 
-
+// saving user in database
 const login = async (request, response) => {
   const user = request.userPayload;
   const orgID = request.params.id;
@@ -10,7 +10,7 @@ const login = async (request, response) => {
     response.json(promise);
 };
 
-
+// getting all users present in org
 const getUsers = (request, response) => {
   const googleID = request.userPayload.googleID;
   const promise = userService.user(googleID);
@@ -23,6 +23,7 @@ const getUsers = (request, response) => {
   });
 };
 
+// getting login user
 const getUser = (request, response) => {
   const googleID = request.userPayload.googleID;
   const promise = userService.user(googleID);
@@ -32,6 +33,7 @@ const getUser = (request, response) => {
   });
 };
 
+//updating user profile
 const updateProfile = (request, response) => {
   const googleID = request.userPayload.googleID;
   const profile =  {...request.body};

@@ -17,6 +17,7 @@ function Profile(props) {
 
   const token = Cookies.get('tokenId');
 
+  // Loading profile on page load
   useEffect(() => {
 
     fetch('http://localhost:8081/user/',{
@@ -43,6 +44,7 @@ function Profile(props) {
   });
 
 
+  // updating profile
   const updateProfile = (e)=>{
     e.preventDefault();
 

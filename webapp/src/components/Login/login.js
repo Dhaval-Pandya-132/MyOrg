@@ -20,7 +20,7 @@ function Login(props) {
   const [orgPh, setOrgPh] = useState('');
   const [orgAddress, setOrgAddress] = useState('');
 
-
+  // on success by google login
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res);
     refreshTokenSetup(res);
@@ -46,10 +46,12 @@ function Login(props) {
     props.history.push("dashboard");
   };
 
+  // on failure by google login
   const onFailure = (res) => {
     console.log('Login failed: res:', res);
   };
 
+  // registering organization
   const orgRegistration = (e) => {
     e.preventDefault();
     const min = 1;
@@ -85,6 +87,7 @@ function Login(props) {
 
   }
 
+  // clearing form
   const reset = () => {
     setOrgID('');
     setOrgName('');
@@ -104,7 +107,7 @@ function Login(props) {
 
       {isRegister ?
         (<div>
-
+          {/* for organization registration */}
           <Form onSubmit={orgRegistration}>
             <Form.Group>
               <Form.Group controlId="orgName">
@@ -150,6 +153,7 @@ function Login(props) {
           </Form>
         </div>) :
         (
+          //  for Login
           <div>
             <div className="login-container">
               <input type="text" className="form-control" name="orgID" value={orgID}

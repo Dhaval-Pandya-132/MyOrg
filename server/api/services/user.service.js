@@ -1,17 +1,19 @@
 import userModel from '../models/users.model';
 import 'babel-polyfill';
 
+// getting all user by org id
 const search = async(id) => {
   const promise = userModel.find({orgID: id}).exec();
   return promise;
 }
 
+// searching for user by google id
 const user = (id) => {
     const promise = userModel.findOne({ googleID: id});
     return promise;  
 }
 
-
+// saving user if not present in database
 const login = async (user,orgID) => {
     
     const existingUser = await userModel.findOne({googleID: user.googleID});
@@ -26,6 +28,7 @@ const login = async (user,orgID) => {
     }
 }
 
+// updating user profile
 const profile = (user,profile)=>{
     console.log(profile);
     user.lastModifiedDate = new Date();
