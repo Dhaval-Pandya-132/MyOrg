@@ -15,11 +15,14 @@ import eventService from '../../services/events.service'
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import Cookies from 'js-cookie';
+import UserContext from '../../contexts/UserContext'
+
 
 const localizer = momentLocalizer(moment);
 const BigCalendar = withDragAndDrop(Calendar);
 class Calender extends Component {
-
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -31,15 +34,26 @@ class Calender extends Component {
 
   componentDidMount() {
     this.syncCalendar();
+    console.log("this.context-->", this.context)
   }
 
   syncCalendar = async () => {
     const tokenId = Cookie.get('tokenId');
     const accessToken = Cookie.get('accessToken');
+
     const eventList = await eventService.getAllEvents(tokenId);
     const googleEventList = await eventService
       .getAllGoogleCalendarEvents(tokenId, accessToken);
+    if (googleEventList.message === "Auth failed") {
+      Cookie.remove('tokenId');
+      Cookies.remove('accessToken');
+      this.props.history.push('signup');
+      this.context.setIsAuthenticated(false);
+      return;
+    }
+
     const { items } = { ...googleEventList }
+
     console.log("googleEventList", googleEventList);
     console.log("EventList", eventList);
     if (items.length === eventList.length) {

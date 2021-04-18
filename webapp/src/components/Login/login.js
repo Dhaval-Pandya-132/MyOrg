@@ -11,7 +11,7 @@ const clientId = GoogleConfig.clientId;
 
 function Login(props) {
 
-  const { setIsAuthenticated } = useContext(UserContext);
+  const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
   const [isRegister, setisRegister] = useState(false);
   const [orgID, setOrgID] = useState('');
   const [orgName, setOrgName] = useState('');
@@ -180,7 +180,7 @@ function Login(props) {
             onFailure={onFailure}
             cookiePolicy={'single_host_origin'}
             style={{ marginTop: '100px' }}
-            isSignedIn={true}
+            isSignedIn={isAuthenticated}
           />
           <p className="login-policy">By Signing up, you agree to our Terms & Private Policy</p>
 
