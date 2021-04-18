@@ -10,6 +10,7 @@ import { calendarReducer } from './reducers/calendarState';
 import Calender from './components/Calendar/Calendar';
 import LandingPage from './components/Web-Chat-Component/LandingPage';
 import UserContext from "./contexts/UserContext";
+import UserProfile from "./components/UserProfile/profile";
 import Sticky from './components/Sticky-Notes/Sticky';
 import StickyLandingPage from './components/Sticky-Notes/StickyLandingPage';
 import Cookie from "js-cookie";
@@ -39,6 +40,7 @@ function CustomRoutes() {
                                     <Route path="/calendar" component={Calender} />
                                     <Route path="/messages" component={LandingPage} />
                                     <Route path="/sticky" component={StickyLandingPage} />
+                                    <Route path="/profile" component={UserProfile} />
                                 </Switch>  
                             :   <div>
                                     <Route path="/signup" component={App} />

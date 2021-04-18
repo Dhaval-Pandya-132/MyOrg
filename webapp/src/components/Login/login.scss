@@ -2,22 +2,9 @@ $white: #fff;
 $google-blue: #4285f4;
 $button-active-blue: #1669F2;
 
-.login-btn{
-    background-color: rgb(255, 255, 255);
-    display: inline-flex;
-    align-items: center;
-    color: rgba(0, 0, 0, 0.54);
-    box-shadow: 0px 2px 2px 0px, 0px 0px 1px 0px;
-    padding: 0px;
-    border-radius: 2px;
-    border: 1px solid transparent;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: Roboto, sans-serif;
-}
-
 .container{
   padding-top:5%;
+  width:530px;
 }
 
 //login policy
@@ -25,6 +12,7 @@ $button-active-blue: #1669F2;
     font-size: 15px;
     color: white;
     margin-top: 1%;
+    margin-left: 65px;
 }
 
 #snackbar {

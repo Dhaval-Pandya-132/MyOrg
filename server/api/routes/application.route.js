@@ -6,17 +6,22 @@ import checkAuth from './../middleware/Oauth';
 
 const router = express.Router();
 
+// organization routes 
 router.route('/org/:id')
     .get(orgController.getOrg)
 
 router.route('/org')
     .post(orgController.saveOrg);
 
+// user routes
 router.route('/login/:id')
     .post(checkAuth, userController.login);
 
 router.route('/user')
     .get(checkAuth, userController.getUser);
+
+router.route('/updateprofile')
+    .put(checkAuth, userController.updateProfile);
 
 router.route('/')
     .get(checkAuth, userController.getUsers);

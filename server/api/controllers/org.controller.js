@@ -1,6 +1,7 @@
 import orgService from "../services/org.service";
 import emailService from "../services/email.service";
 
+// getting org by ID
 const getOrg = (request, response) => {
     const id = request.params.id;
     const promise = orgService.search(id);
@@ -10,6 +11,7 @@ const getOrg = (request, response) => {
   }).catch(handleError(response)); 
 };
 
+// saving org
 const saveOrg = (request, response) => {
     const org =  {...request.body};
 
