@@ -16,7 +16,11 @@ export default function Conversations() {
             active={conversation.selected}
             > 
 
-            {conversation.recipients.map(r => r.name).join(', ')}
+            {conversation.recipients.map(r =>  
+              
+              r.name
+            
+            ).join(', ')}
 
           </ListGroup.Item>
         ))}

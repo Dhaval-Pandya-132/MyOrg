@@ -3,6 +3,8 @@ import userController from './../controllers/user.controller';
 import eventController from './../controllers/events.controller';
 import orgController from './../controllers/org.controller';
 import checkAuth from './../middleware/Oauth';
+import recipientsController from '../controllers/recipients.controller';
+import conversationController from '../controllers/conversations.controller';
 
 const router = express.Router();
 
@@ -46,6 +48,24 @@ router.route('/googleEvent')
 router.route('/googleEvent/:eventId')
     .put(checkAuth, eventController.updateGoogleCalendar)
     .delete(checkAuth, eventController.deleteGoogleEvent);
+
+// Messages API
+router.route('/mymessages/:id')
+ //   .get(checkAuth, conversationController.getConversation)
+ //   .put(checkAuth, conversationController.updateConversation);
+    .get(checkAuth,  recipientsController.getRecipient)
+   .put(checkAuth, recipientsController.updateRecipient);
+
+router.route('/mymessages/')
+ //     .post(checkAuth, conversationController.saveConversation);
+
+
+   .post(checkAuth, recipientsController.saveRecipient);
+
+
+
+
+
 
 
 export default router;
