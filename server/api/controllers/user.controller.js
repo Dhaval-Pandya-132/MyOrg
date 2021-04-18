@@ -32,8 +32,23 @@ const getUser = (request, response) => {
   });
 };
 
+const updateProfile = (request, response) => {
+  const googleID = request.userPayload.googleID;
+  const profile =  {...request.body};
+  const promise = userService.user(googleID);
+  promise.then((user) => {
+    const prom = userService.profile(user,profile);
+    prom.then((u) => {
+      response.status(200);
+      response.json(u);
+    });
+  });
+};
+
+
 export default {
       getUsers: getUsers,
       login: login, 
-      getUser: getUser
+      getUser: getUser,
+      updateProfile: updateProfile
 }

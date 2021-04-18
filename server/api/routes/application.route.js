@@ -18,6 +18,9 @@ router.route('/login/:id')
 router.route('/user')
     .get(checkAuth, userController.getUser);
 
+router.route('/updateprofile')
+    .put(checkAuth, userController.updateProfile);
+
 router.route('/')
     .get(checkAuth, userController.getUsers);
 

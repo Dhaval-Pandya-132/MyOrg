@@ -26,8 +26,25 @@ const login = async (user,orgID) => {
     }
 }
 
+const profile = (user,profile)=>{
+    console.log(profile);
+    user.lastModifiedDate = new Date();
+    user.phoneNumber = profile.phoneNumber;
+    user.address = profile.address;
+    user.role = profile.role;
+    user.managerName = profile.managerName;
+    const promise = userModel.findOneAndUpdate(
+        { googleID: user.googleID },
+        user,
+        {new: true}
+    ).exec();
+    return promise;
+
+}
+
 export default {
     search: search,
     login: login,
-    user: user
+    user: user,
+    profile: profile
 };
