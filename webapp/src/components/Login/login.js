@@ -162,7 +162,7 @@ function Login(props) {
                     .then(response => response.json())
                     .then(data => {
                       console.log('Success:', data);
-                      if (data !== null)
+                      if (data !== null && orgID !== "")
                         renderProps.onClick()
                       else {
                         alert('Please enter correct organization ID')
