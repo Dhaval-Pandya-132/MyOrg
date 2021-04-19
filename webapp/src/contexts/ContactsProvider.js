@@ -3,7 +3,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import useLocalStorage from '../components/hooks/useLocalStorage';
 import Cookies from 'js-cookie'
+import ChatService from '../services/saveconvo.service';
+
+
 const ContactsContext = React.createContext();
+
+
 
 export function useContacts(){
     return useContext(ContactsContext)
@@ -17,7 +22,7 @@ export  function ContactsProvider({ id, children  }) {
     
     useEffect(() => {
         let mounted = true;
-        fetchUsers()
+        ChatService.getUsers(Cookies.get('tokenId')) // fetchUsers()
           .then(items => {
             if(mounted) {
               console.log('contacts', items)

@@ -7,6 +7,7 @@ import { ContactsProvider } from '../../contexts/ContactsProvider';
 import { ConversationProvider } from '../../contexts/ConversationProvider';
 import { SocketProvider } from '../../contexts/SocketProvider';
 import Cookies from 'js-cookie'
+import ChatService from '../../services/saveconvo.service';
 
 function  LandingPage() {
   
@@ -33,7 +34,7 @@ function  LandingPage() {
 
   useEffect(() => {
     let mounted = true;
-    fetchUser()
+    ChatService.getUser(Cookies.get('tokenId'))  // fetchUser()
       .then(items => {
         if(mounted) {
           setId(items.email);

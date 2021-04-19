@@ -17,6 +17,8 @@ const updateConversations = (email, updatedRecipients) => {
     return promise;
 }
 
+
+// Save conversations
 const saveConversations = (newConversations) => {
     const tempConv =  new conversationsModel(newConversations);
     const promise = tempConv.save();
