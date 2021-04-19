@@ -14,7 +14,9 @@ import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalA
 import { addNewEvent, getAllEvents } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
 import eventService from '../../services/events.service'
+import userService from '../../services/users.service'
 import List from './List'
+import Cookies from 'js-cookie';
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -22,15 +24,28 @@ class EventForm extends React.Component {
         this.state = {
             formData: { ...EVENTFORM_INIT_STATE },
             errorList: [],
-            userList: [
-                { value: 'dhavalpandya132@gmail.com', label: 'dhavalpandya132@gmail.com' },
-                { value: 'pandya.d@northeastern.edu', label: 'pandya.d@northeastern.edu' },
-                { value: 'dhavalpandya296@gmail.com', label: 'dhavalpandya296@gmail.com' }
-
-            ]
+            userList: []
         }
     }
 
+    componentDidMount() {
+        this.getUsers();
+
+    }
+
+    getUsers = async () => {
+
+        const tokenId = Cookies.get('tokenId');
+        const googleId = Cookies.get('googleId');
+        const response = await userService.getUsersByGoogleId(tokenId, { googleId });
+        console.log("response", response);
+        const userList = response
+            .filter(user => user.googleID !== googleId)
+            .map(object => { return { value: object.email, label: object.email } });
+        //    console.log("response", response)
+        this.setState({ userList: userList });
+
+    }
 
     save = async (event) => {
 

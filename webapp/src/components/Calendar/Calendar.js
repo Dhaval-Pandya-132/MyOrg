@@ -47,8 +47,10 @@ class Calender extends Component {
     if (googleEventList.message === "Auth failed") {
       Cookie.remove('tokenId');
       Cookies.remove('accessToken');
+      Cookies.remove('googleId');
       this.props.history.push('signup');
       this.context.setIsAuthenticated(false);
+      alert("Authentication token is expired please sign in again")
       return;
     }
 

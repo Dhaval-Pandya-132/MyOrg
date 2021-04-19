@@ -15,6 +15,7 @@ function Logout(props) {
     console.log('Logout made successfully');
     Cookies.remove('tokenId');
     Cookies.remove('accessToken');
+    Cookies.remove('googleId');
     setIsAuthenticated(false);
     props.history.push("signup");
   };
