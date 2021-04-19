@@ -20,6 +20,7 @@ function Profile(props) {
   // Loading profile on page load
   useEffect(() => {
 
+    // Getting user profile
     fetch('http://localhost:8081/user/',{
         method: 'GET',
         headers: {
@@ -29,6 +30,7 @@ function Profile(props) {
     })
     .then(response => response.json())
     .then(data => {
+        // Setting the states
         setUserName(data.userName);
         setOrgID(data.orgID);
         setuserEmail(data.email);
@@ -64,6 +66,7 @@ function Profile(props) {
     .then(response => {
             response.json().then(data => {
               console.log('Success:', data);
+              // snacke bar
               let x = document.getElementById("snackbar");
               x.className = "show";
               setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
