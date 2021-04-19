@@ -12,6 +12,7 @@ const clientId = GoogleConfig.clientId;
 
 function Login(props) {
 
+  // States
   const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
   const [isRegister, setisRegister] = useState(false);
   const [orgID, setOrgID] = useState('');
@@ -22,13 +23,13 @@ function Login(props) {
 
   // on success by google login
   const onSuccess = (res) => {
-    console.log('Login Success: currentUser:', res);
+
     refreshTokenSetup(res);
     Cookies.set('tokenId', res.tokenId);
     Cookies.set('accessToken', res.accessToken);
     setIsAuthenticated(true);
 
-    console.log('orgID', orgID);
+    //saving user to database
     fetch('http://localhost:8081/login/' + orgID, {
       method: 'POST',
       headers: {
@@ -57,7 +58,8 @@ function Login(props) {
     const min = 1;
     const max = 10000;
     const tempOrgID = Math.floor(min + (Math.random() * (max - min)));
-
+    
+    // Checking org 
     fetch('http://localhost:8081/org/', {
       method: 'POST',
       headers: {
@@ -77,7 +79,9 @@ function Login(props) {
         } else {
           response.json().then(data => {
             console.log('Success:', data);
+            //Rest the input fields
             reset();
+            // Snake bar
             let x = document.getElementById("snackbar");
             x.className = "show";
             setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
@@ -105,8 +109,7 @@ function Login(props) {
         <Button onClick={() => { setisRegister(true) }} className={`${isRegister ? 'btn-dark' : 'btn-light'} w-50 rounded-0`}>Register Organisation</Button>
       </div>
 
-      {isRegister ?
-        (<div>
+      {isRegister ?(<div>
           {/* for organization registration */}
           <Form onSubmit={orgRegistration}>
             <Form.Group>
@@ -119,7 +122,6 @@ function Login(props) {
                   placeholder="Enter Organization Name"
                   required />
               </Form.Group>
-
               <Form.Group controlId="orgEmail">
                 <Form.Control
                   type="email"
@@ -151,14 +153,13 @@ function Login(props) {
               <Button type="submit" className="bg-dark w-100 form-control">Register</Button>
             </div>
           </Form>
-        </div>) :
-        (
-          //  for Login
+        </div>) :(
           <div>
             <div className="login-container">
               <input type="text" className="form-control" name="orgID" value={orgID}
                 onChange={(e) => { setOrgID(e.target.value) }} placeholder="Organization ID" required /><br />
             </div>
+            {/* Login button */}
             <GoogleLogin
               render={renderProps => (
                 <button className="google-button" onClick={() => {
@@ -192,10 +193,8 @@ function Login(props) {
               onFailure={onFailure}
               cookiePolicy={'single_host_origin'}
               style={{ marginTop: '100px' }}
-              isSignedIn={isAuthenticated}
-            />
-            <p className="login-policy">By Signing up, you agree to our Terms & Private Policy</p>
-            
+              isSignedIn={isAuthenticated}/>
+            <p className="login-policy">By Signing up, you agree to our Terms & Private Policy</p>            
           </div>)}
     </div>
   );
