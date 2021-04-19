@@ -41,13 +41,13 @@ function Profile(props) {
     console.error('Error:', error);
     });
 
-  });
+  }, []);
 
 
   // updating profile
   const updateProfile = (e)=>{
     e.preventDefault();
-
+    console.log("in update profile!")
     fetch('http://localhost:8081/updateprofile/', {
       method: 'PUT',
       headers: {
