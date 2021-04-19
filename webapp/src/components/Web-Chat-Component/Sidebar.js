@@ -23,7 +23,11 @@ export default function Sidebar({ id }) {
         setModalOpen(false)
 
     }
-
+    
+    /* <div className="p-2 border-top border-right small">
+            Your Id: <span className="text-muted">{id}</span>
+          </div>   */ 
+          
 
     return (
         <div style={{ width: '250px' }} className="d-flex flex-column">
@@ -44,12 +48,19 @@ export default function Sidebar({ id }) {
               <Contacts />
             </Tab.Pane>
           </Tab.Content>
-          <div className="p-2 border-top border-right small">
-            Your Id: <span className="text-muted">{id}</span>
-          </div>
-          <Button onClick={() => setModalOpen(true)} className="rounded-0">
-            New {conversationsOpen ? 'Conversation' : 'Contact'}
-          </Button>
+
+        
+          
+          {
+          conversationsOpen ? 
+            <>
+           
+            <Button onClick={() => setModalOpen(true)} className="rounded-0">
+              New {conversationsOpen ? 'Conversation' : 'Contact'}
+            </Button> </> : <></>
+            
+          }
+
         </Tab.Container>
   
         <Modal show={modalOpen} onHide={closeModal} animation={false} backdrop={false} >

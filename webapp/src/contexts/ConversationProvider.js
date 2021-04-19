@@ -55,15 +55,10 @@ useEffect(() => {
       .then(items => { 
         if(mounted) {
           if(items){
-            // If conversation present
-            console.log('My Conversation', items.conversations)
             setConversations(items.conversations);
           } else {
-            // If conversation not present
-            console.log('creating convo doc')
-            ChatService.addConversations(Cookies.get('tokenId'), id) //createConversationDoc() 
+             ChatService.addConversations(Cookies.get('tokenId'), id) //createConversationDoc() 
           }
-       //   setConversations(items.conversations);
         }
       })
     return () => mounted = false;
@@ -71,16 +66,10 @@ useEffect(() => {
 
 
   function createConversation(recipients) {
-  //  console.log('formatted convo : ')
-    let flag = false;
-  //  console.log(formattedConversations)
+   let flag = false;
     let conv = formattedConversations.map(conv=> conv.recipients.map( rec => rec.id))
-  //  console.log("con",conv)
-    for(let i = 0; i  < conv.length; i++){
-      // console.log("create convo conversation ")
-      // console.log(conv[i])
-      // console.log("create convo recipients ")
-      // console.log(recipients)
+   for(let i = 0; i  < conv.length; i++){
+  
      
       flag =  arrayEquality(conv[i], recipients)
 
@@ -181,9 +170,6 @@ useEffect(() => {
 
 
   function sendMessage(recipients, text){
-
-
-
 
     addMessageToConversation({ recipients, text, sender: id })    
     

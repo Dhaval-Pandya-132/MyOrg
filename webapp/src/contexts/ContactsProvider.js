@@ -1,7 +1,6 @@
 // Instead of passing values from App to Sidebar to Modal and vice versa we create a Context
 
 import React, { useContext, useEffect, useState } from 'react'
-import useLocalStorage from '../components/hooks/useLocalStorage';
 import Cookies from 'js-cookie'
 import ChatService from '../services/saveconvo.service';
 
