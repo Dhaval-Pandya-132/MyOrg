@@ -11,6 +11,7 @@ const app = express();
 mongoose.connect(CONSTANT.DB_URL,
     { useNewUrlParser: true, useUnifiedTopology: true });
 
+// allow ing CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");

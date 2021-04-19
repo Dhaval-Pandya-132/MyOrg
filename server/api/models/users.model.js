@@ -27,11 +27,9 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      // required: "role"
     },
     managerName: {
       type: String,
-      // required: "managerName"
     },
     createdDate: {
       type: Date,
