@@ -10,7 +10,7 @@ function Logout(props) {
 
   const { setIsAuthenticated } = useContext(UserContext);
 
-
+  // for logout 
   const onSuccess = () => {
     console.log('Logout made successfully');
     Cookies.remove('tokenId');
