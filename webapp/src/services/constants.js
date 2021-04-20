@@ -9,3 +9,4 @@ export const ADD_NEW_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`
 export const DELETE_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`
 export const UPDATE_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`
 export const GET_USERS_BY_GOOGLE_ID = `${SERVER_ENDPOINT}/getUsers`
+export const GET_ORG_DETAILS = `${SERVER_ENDPOINT}/org`

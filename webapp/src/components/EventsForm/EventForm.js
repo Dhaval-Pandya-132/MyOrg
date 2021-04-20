@@ -449,7 +449,8 @@ class EventForm extends React.Component {
 const mapStateToProps = (state) => ({
     show: state.eventFormReducer.modalShow,
     dateRange: state.eventFormReducer.dateRange,
-    selectedEvent: state.calendarReducer.selectedEvent
+    selectedEvent: state.calendarReducer.selectedEvent,
+    userList: state.globalStateReducer.userList
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { connect } from 'react-redux';
 import { Form, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './login.scss';
@@ -7,7 +8,10 @@ import { refreshTokenSetup } from '../../utils/refreshToken';
 import GoogleConfig from './../../apiGoogleconfig';
 import Cookies from 'js-cookie';
 import UserContext from './../../contexts/UserContext';
-
+import { getOrgDetails } from '../../actions/organizationActions'
+import { getAllUsers } from '../../actions/usersActions'
+import orgServices from '../../services/org.service'
+import userService from '../../services/users.service'
 const clientId = GoogleConfig.clientId;
 
 function Login(props) {
@@ -20,6 +24,20 @@ function Login(props) {
   const [orgPh, setOrgPh] = useState('');
   const [orgAddress, setOrgAddress] = useState('');
 
+  const updateOrgDetails = async (tokenId, orgID) => {
+    const response = await orgServices
+      .getOrgDetails(tokenId, orgID);
+    props.getOrgDetails(response);
+  }
+
+  const getUsers = async (tokenId, googleId) => {
+
+    const response = await userService.getUsersByGoogleId(tokenId, { googleId });
+    console.log("response", response);
+    props.getAllUsers(response)
+
+  }
+
   // on success by google login
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res);
@@ -27,8 +45,11 @@ function Login(props) {
     Cookies.set('tokenId', res.tokenId);
     Cookies.set('accessToken', res.accessToken);
     Cookies.set('googleId', res.googleId);
-    setIsAuthenticated(true);
+    Cookies.set('orgId', orgID);
 
+    setIsAuthenticated(true);
+    updateOrgDetails(res.tokenId, orgID);
+    getUsers(res.tokenId, res.googleId);
     console.log('orgID', orgID);
     fetch('http://localhost:8081/login/' + orgID, {
       method: 'POST',
@@ -44,6 +65,7 @@ function Login(props) {
       .catch((error) => {
         console.error('Error:', error);
       });
+    //  updateOrgDetails(res.tokenId, orgID);
     props.history.push("dashboard");
   };
 
@@ -202,4 +224,13 @@ function Login(props) {
   );
 }
 
-export default Login;
+
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getOrgDetails: (orgDetails) => getOrgDetails(dispatch, orgDetails),
+  getAllUsers: (userList) => getAllUsers(dispatch, userList)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
