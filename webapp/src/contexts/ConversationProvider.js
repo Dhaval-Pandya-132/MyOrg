@@ -4,6 +4,7 @@ import React, { useContext, useState, useEffect, useCallback } from 'react'
 // import useLocalStorage from '../components/hooks/useLocalStorage';
 import { useContacts } from './ContactsProvider'
 import { useSocket } from './SocketProvider'
+import ChatService from '../services/saveconvo.service';
 
 const ConversationsContext = React.createContext()
 
@@ -13,9 +14,10 @@ export function useConversations() {
 
 export function ConversationProvider({ id, children }) {
   const [conversations, setConversations] = useState([]); // useLocalStorage('conversations', []); //useState([]);  // useLocalStorage('conversations', []);
-  const { contacts } = useContacts()
-  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0)
-  const socket = useSocket()
+  const { contacts } = useContacts();
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+  const socket = useSocket();
+  const [messageDetail, setMessageDetails] =  useState({});
 
 
 
@@ -46,108 +48,28 @@ export function ConversationProvider({ id, children }) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  APIs
 useEffect(() => {
     let mounted = true;
-    fetchUsersConvo()
+    ChatService.getConversations(Cookies.get('tokenId'), id)       // fetchUsersConvo()
       .then(items => { 
         if(mounted) {
           if(items){
-            // If conversation present
-            console.log('My Conversation', items.conversations)
             setConversations(items.conversations);
           } else {
-            // If conversation not present
-            console.log('creating convo doc')
-            createConversationDoc() 
+             ChatService.addConversations(Cookies.get('tokenId'), id) //createConversationDoc() 
           }
-       //   setConversations(items.conversations);
         }
       })
     return () => mounted = false;
   }, [])
 
 
-const fetchUsersConvo = async () => { 
-    const tokenId = Cookies.get('tokenId');
-    const res = await fetch(`http://localhost:8081/mymessages/${id}`, {
-//   const res = await fetch(`http://localhost:8081/mymessages/`, {
-        method: 'GET',
-        headers:{
-        'tokenId': tokenId
-        },
-    })
-    const data = await res.json()
-    return data
-    } 
-
-  const createConversationDoc = async () => { 
-      const tokenId = Cookies.get('tokenId');
-      const res = await fetch(`http://localhost:8081/mymessages/`, {
-          method: 'POST',
-          headers:{
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'tokenId': tokenId
-          },
-          body: JSON.stringify({
-              userEmail: id,
-              conversations: []
-          })
-      })
-      const data = await res.json()
-      return data
-      } 
-
-
-      const newConversationPut = async (newConversations) => { 
-        const tokenId = Cookies.get('tokenId');
-        const res = await fetch(`http://localhost:8081/mymessages/${id}`, {
-            method: 'PUT',
-            headers:{
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'tokenId': tokenId
-            },
-            body: JSON.stringify({
-                userEmail: id,
-                conversations: newConversations
-            })
-        })
-        const data = await res.json()
-        return data
-        } 
-
-
-
-
   function createConversation(recipients) {
-    console.log('formatted convo : ')
-    let flag = false;
-    console.log(formattedConversations)
+   let flag = false;
     let conv = formattedConversations.map(conv=> conv.recipients.map( rec => rec.id))
-    console.log("con",conv)
-    for(let i = 0; i  < conv.length; i++){
-      console.log("create convo conversation ")
-      console.log(conv[i])
-      console.log("create convo recipients ")
-      console.log(recipients)
+   for(let i = 0; i  < conv.length; i++){
+  
      
       flag =  arrayEquality(conv[i], recipients)
 
@@ -172,6 +94,8 @@ const fetchUsersConvo = async () => {
         const newMessage = { sender, text }
         const newConversations = prevConversations.map(
             conversation => {
+              console.log('XXXX conversation', conversation)
+              console.log('XXXX recipient', recipients)
                 if(arrayEquality(conversation.recipients, recipients)){
 
                     madeChange = true
@@ -190,16 +114,10 @@ const fetchUsersConvo = async () => {
         // Its a new conversation
         if(madeChange){
 
-            // console.log('New Conversations : ');
-            // console.log(newConversations);
-            // // const messages = newConversations[0].messages;
-            // const recipients = newConversations[0].recipients;
-            // console.log(messages);
-            // console.log(recipients);
+            console.log("new conversations");
+            console.log(newConversations);
+            ChatService.updateConversations(Cookies.get('tokenId'), id, newConversations);
 
-            // PUT method
-
-            newConversationPut(newConversations);
 
             return newConversations
         }
@@ -213,11 +131,12 @@ const fetchUsersConvo = async () => {
 
 
 
-          console.log('prevConversations', prevConversations)
+         // console.log('prevConversations', prevConversations)
 
           console.log('New Message', newMessage)
+          ChatService.updateConversations(Cookies.get('tokenId'), id, conversationsObj);
 
-          newConversationPut(conversationsObj);
+
 
 
           return [
@@ -235,20 +154,28 @@ const fetchUsersConvo = async () => {
 
   useEffect(() => {
     if(socket == null){ 
+      console.log("XXXX messageDetails")
+      console.log(messageDetail);
+     
       return
     }
+
     socket.on('recieve-message', addMessageToConversation)
 
+
+
+
     return () => socket.off('recieve-message')
-  }, [socket, addMessageToConversation]) 
+  }, [socket, addMessageToConversation, messageDetail]) 
 
 
   function sendMessage(recipients, text){
-    socket.emit('send-message', { recipients, text })
 
+    addMessageToConversation({ recipients, text, sender: id })    
     
+    setMessageDetails({ recipients, text, sender: id })
 
-    addMessageToConversation({ recipients, text, sender: id })
+    socket.emit('send-message', { recipients, text })
   }
 
 

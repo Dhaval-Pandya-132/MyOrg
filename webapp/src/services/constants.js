@@ -10,3 +10,13 @@ export const DELETE_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`
 export const UPDATE_GOOGLE_EVENT = `${SERVER_ENDPOINT}/googleEvent`
 export const GET_USERS_BY_GOOGLE_ID = `${SERVER_ENDPOINT}/getUsers`
 export const GET_ORG_DETAILS = `${SERVER_ENDPOINT}/org`
+
+
+
+
+// Web-Chat API
+export const GET_CONVERSATIONS = `${SERVER_ENDPOINT}/mymessages`
+export const UPDATE_CONVERSATIONS = `${SERVER_ENDPOINT}/mymessages`
+export const ADD_NEW_CONVERSATIONS = `${SERVER_ENDPOINT}/mymessages`
+export const GET_USER = `${SERVER_ENDPOINT}/user`
+export const GET_USERS = `${SERVER_ENDPOINT}/`

@@ -1,7 +1,7 @@
 import React from 'react'
-import OpenConversation from '../Web-Chat-Component/OpenConversation'
-import Sidebar from '../Web-Chat-Component/Sidebar'
-import './Dashboard1.scss'
+import OpenConversation from './OpenConversation'
+import Sidebar from './Sidebar'
+import './Dashboard.scss'
 import { useConversations } from '../../contexts/ConversationProvider'
 
 
