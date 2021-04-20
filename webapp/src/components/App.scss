@@ -188,9 +188,9 @@ h2 {
     margin: 20px 0px;
     // align-items: left;
     position: absolute;
-    right: 220px;
+    right: -50px;
     width: 250px;
-    top: 100px;
+    top: 230px;
 
     
 }
@@ -254,8 +254,22 @@ h2 {
     background-color: #d9534f !important;
 }
 
-// .container {
-// color: red;
-// text-align: left;
-// }
+.row {
+color: red;
+text-align: left;
+display: flex;
+justify-content: space-around;
+align-items: center;
+align-content: center;
+width: 1000px;
+}
+
+.heading{
+    position: relative;
+    font-size: 50px;
+    color: white;
+    font-weight: 600;
+    font-family: Alegreya;
+    top: 35px;
+}
 

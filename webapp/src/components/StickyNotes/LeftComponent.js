@@ -5,7 +5,8 @@ export const LeftComponent = () => {
         
     
     
-    <div className="container">
+    // <div className="container">
+
 
         <div class="row">
         
@@ -18,7 +19,7 @@ export const LeftComponent = () => {
                     <div class="icon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="calendar" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         
@@ -34,6 +35,7 @@ export const LeftComponent = () => {
                     <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+            
         
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-orange">
@@ -44,9 +46,10 @@ export const LeftComponent = () => {
                     <div class="icon">
                         <i class="fa fa-comments-o" aria-hidden="true"></i>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="messages" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+            
             
             {/* <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-red">
@@ -61,7 +64,8 @@ export const LeftComponent = () => {
                 </div>
             </div>   */}
         </div>
-    </div>
+        
+    // </div>
             
         
     )
