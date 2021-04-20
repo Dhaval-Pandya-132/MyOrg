@@ -32,7 +32,7 @@
 </table>
 
 ### Objective
-Create a MyOrganization react application using the nodejs REST APIs
+Create a MyOrganization react application using the nodejs REST API
 
 ### Technology Stack
 * React
@@ -64,16 +64,20 @@ $ npm start
 The frontend stack should be running and listening for HTTP requests on port 3000 on localhost.
 http://localhost:3000/
 
-* Navigate to `api` folder to run backend stack
+* Navigate to `server` folder to run backend stack
 ```
 $ cd server
 $ npm install
+```
 * For Development enviroment 
+```
 $ npm run watch:dev
+```
 * For Production enviroment 
+```
 $ npm run watch:prod
 ```
 The backend stack should be running and listening for HTTP requests on port 8081 on localhost.
 http://localhost:8081/
 
-Note: Detailed README will find in respective folders
+<b>Note</b>: Detailed README will find in respective folders
