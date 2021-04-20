@@ -12,7 +12,7 @@ import LandingPage from './components/Web-Chat-Component/LandingPage';
 import UserContext from "./contexts/UserContext";
 import UserProfile from "./components/UserProfile/profile";
 import Sticky from './components/Sticky-Notes/Sticky';
-import StickyLandingPage from './components/Sticky-Notes/StickyLandingPage';
+import StickyNote from './components/StickyNotes/StickyNote';
 import Cookie from "js-cookie";
 
 
@@ -39,7 +39,7 @@ function CustomRoutes() {
                                     <Route path="/dashboard" component={Dashboard}/>
                                     <Route path="/calendar" component={Calender} />
                                     <Route path="/messages" component={LandingPage} />
-                                    <Route path="/sticky" component={StickyLandingPage} />
+                                    <Route path="/sticky" component={StickyNote} />
                                     <Route path="/profile" component={UserProfile} />
                                 </Switch>  
                             :   <div>
