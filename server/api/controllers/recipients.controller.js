@@ -1,7 +1,7 @@
 import recipientsService from "../services/recipients.service";
 import 'babel-polyfill';
 
-// Save a new ToDo
+// Save a new recipient
 const saveRecipient = (req, res) => {
 
   const newRecipient = {...req.body};
@@ -14,7 +14,7 @@ const saveRecipient = (req, res) => {
 }
 
 
-// Get a ToDo with specified id
+// Get a recipient with specified id
 const getRecipient = (req, res) => {
   // get the id from params
   const email = req.params.id;
