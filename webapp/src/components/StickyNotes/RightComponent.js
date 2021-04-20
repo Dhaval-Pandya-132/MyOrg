@@ -62,7 +62,31 @@ export function RightComponent() {
     };
 
     return (
+        <div>
+            <nav class="topnav">
+                
+            
+                
+                <a class="navbar-brand" href="#">
+                <div class="logo-image">
+                        <img src="https://wallpapercave.com/wp/wp2048440.jpg" class="img-fluid"/>
+                </div>
+                </a>
+                <a href="#">Hello, Rohit</a>
+                <a href="#">Logout</a>
+                <a href="#">Edit Profile</a>
+                <a class="active" href="#">Home</a>
+                <a class = "activeRight" href="#"> Northeastern University</a>
+                
+            </nav>
+            
+            
+                {/* <img src="Images/logo.PNG" alt="logo" class="logo"/> */}
+        
         <div className="app" onDragOver={dragOver}>
+                
+            <br/>
+            <br/>
 
             <h2>Notes ({notesState.totalNotes})
                 <span>{notesState.notes.length ? `Last note created: ${notesState.lastNoteCreated}` : ' '}</span>
@@ -76,8 +100,10 @@ export function RightComponent() {
                 <button>Add</button>
             </form>
             <div className="headingUser"> 
-            <h3>Hello, Rohit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="signup"><button>Logout</button></a></h3> 
-            <h5>Your Org is Northeastern University, Boston</h5>
+            {/* <br/>
+            <br/>
+            <h3>Hello, Rohit&nbsp;</h3> 
+            <h5>Your Org is Northeastern University, Boston</h5> */}
             
             </div>
             <div className="heading">Dashboard</div>
@@ -119,6 +145,8 @@ export function RightComponent() {
                     </div>
                 ))
             }
+        </div>
+
         </div>
     );
 }

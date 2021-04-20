@@ -26,8 +26,8 @@ export const LeftComponent = () => {
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-green">
                     <div class="inner">
-                        <h3> 5358 </h3>
-                        <p> Social App </p>
+                        <h3> 53 </h3>
+                        <p> Organization Chart </p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-users" aria-hidden="true"></i>
