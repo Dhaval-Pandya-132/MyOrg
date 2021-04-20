@@ -7,11 +7,14 @@ import Dashboard from './components/Dashboard/dashboard';
 import { globalStateReducer } from './reducers/globalState'
 import { eventFormReducer } from './reducers/eventFormModalState'
 import { calendarReducer } from './reducers/calendarState';
-import Calender from './components/Calendar/Calendar';
+import CalendarContainer from './containers/CalendarContainer';
 import LandingPage from './components/Web-Chat-Component/LandingPage';
+import ChatContainer from './containers/ChatContainer'
 import OrgChartTree from './components/OrgChart/OrgChartTree'
 import UserContext from "./contexts/UserContext";
 import UserProfile from "./components/UserProfile/profile";
+import UserProfileContainer from './containers/UserProfileContainer'
+import OrgChartContainer from './containers/OrgChartContainer'
 import Sticky from './components/Sticky-Notes/Sticky';
 import StickyNote from './components/StickyNotes/StickyNote';
 import Cookie from "js-cookie";
@@ -39,11 +42,11 @@ function CustomRoutes() {
                         ?
                         <Switch>
                             <Route path="/dashboard" component={Dashboard} />
-                            <Route path="/calendar" component={Calender} />
-                            <Route path="/messages" component={LandingPage} />
+                            <Route path="/calendar" component={CalendarContainer} />
+                            <Route path="/messages" component={ChatContainer} />
                             <Route path="/sticky" component={StickyNote} />
-                            <Route path="/profile" component={UserProfile} />
-                            <Route path="/orgchart" component={OrgChartTree} />
+                            <Route path="/profile" component={UserProfileContainer} />
+                            <Route path="/orgchart" component={OrgChartContainer} />
                         </Switch>
                         : <div>
                             <Route path="/signup" component={App} />

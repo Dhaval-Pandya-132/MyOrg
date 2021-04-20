@@ -20,7 +20,7 @@ class OrgChartComponent extends React.Component {
     render() {
         if (this.props.data.length > 0) {
             return (
-                <div>
+                <div style={{ 'margin-top': '100px' }}>
                     <div ref={(node) => (this.node = node)} />
                 </div>
             );

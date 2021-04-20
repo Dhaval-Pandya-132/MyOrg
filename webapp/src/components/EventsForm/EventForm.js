@@ -250,8 +250,8 @@ class EventForm extends React.Component {
                 </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Row} >
+                    <Form >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Title</Form.Label></Col>
                             <Col sm={10}>
                                 <Form.Control id="title"
@@ -263,7 +263,7 @@ class EventForm extends React.Component {
                                 />
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Description</Form.Label></Col>
                             <Col sm={10}>  <Form.Control
                                 id="description"
@@ -273,7 +273,7 @@ class EventForm extends React.Component {
                                 onChange={(event) => { this.onChangeEvent(event) }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Location</Form.Label></Col>
                             <Col sm={10}>  <Form.Control
                                 id="location"
@@ -283,7 +283,7 @@ class EventForm extends React.Component {
                                 onChange={(event) => { this.onChangeEvent(event) }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>Start Date and Time</Form.Label>
                             </Col>
@@ -303,7 +303,7 @@ class EventForm extends React.Component {
                                 }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>End Date and Time</Form.Label>
                             </Col>
@@ -323,7 +323,7 @@ class EventForm extends React.Component {
                                 }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Attendees</Form.Label></Col>
                             <Col sm={10}>
                                 <Select
@@ -340,7 +340,7 @@ class EventForm extends React.Component {
                                 </Select>
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>Add Google Hangout</Form.Label></Col>
                             <Col sm={10}>
