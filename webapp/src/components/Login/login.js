@@ -109,7 +109,7 @@ function Login(props) {
             <div className='container'>
               <div id="snackbar">Organisation ID sent your email</div>
               <div className="text-center p-1 mb-2">
-                    <FontAwesomeIcon className="fa-5x" icon={faUsers}></FontAwesomeIcon>
+                    <FontAwesomeIcon className="fa-4x" icon={faUsers}></FontAwesomeIcon>
                     <h3>MyOrganization</h3>
                     <br/>
               </div>
@@ -164,10 +164,12 @@ function Login(props) {
                   </Form>
                 </div>) :(
                   <div>
+                    <br/>
                     <div className="login-container">
                       <input type="text" className="form-control" name="orgID" value={orgID}
                         onChange={(e) => { setOrgID(e.target.value) }} placeholder="Organization ID" required /><br />
                     </div>
+                    <br/>
                     {/* Login button */}
                     <GoogleLogin
                       render={renderProps => (
