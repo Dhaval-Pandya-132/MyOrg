@@ -265,7 +265,7 @@ h2 {
 }
 
 .topnav {
-	background-color: rgb(1, 67, 133);
+	background-color: rgb(48, 49, 49);
 	overflow: hidden;
 	position: fixed;
 	top: 0;
@@ -275,7 +275,7 @@ h2 {
 
 .topnav a {
 	float: right;
-	color: #adefd1ff;
+	color: rgb(233, 241, 238);
 	text-align: center;
 	padding: 25px 16px;
 	text-decoration: none;
@@ -284,7 +284,7 @@ h2 {
 	font-weight: bold;
 	display: block;
 	&:hover {
-		background-color: rgb(255, 249, 162);
+		background-color: rgb(250, 250, 250);
 		color: black;
 	}
 }
@@ -293,14 +293,14 @@ h2 {
 	background-color: #002036;
 	color: #adefd1ff;
 	&:hover {
-		background-color: rgb(255, 249, 162);
+		background-color: rgb(250, 250, 250);
 		color: black;
 	}
 }
 
 .topnav span.activeRight {
 	font-size: 30px;
-	color: #adefd1ff;
+	color: rgb(255, 255, 255);
 	float: left;
 	font-family: Alegreya;
 	margin-top: 10px;
