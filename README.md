@@ -93,4 +93,7 @@ $ npm run watch:prod
 The backend stack should be running and listening for HTTP requests on port 8081 on localhost.
 http://localhost:8081/
 
+The mogngodb running on port 27017 on localhost.
+http://localhost:27017/
+
 <b>Note</b>: Detailed README will find in respective folders
