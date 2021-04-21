@@ -34,17 +34,14 @@ const getStickies = (tokenId, email) => {
     return fetch(`${GET_STICKIES}/${email}`, init).then(response => response.json());
 }
 
-const addStickies = (tokenId, id) => {
+const addStickies = (tokenId, sticky) => {
     let init = {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             tokenId
         },
-        body: JSON.stringify({
-            userEmail: id,
-            stickies: []
-        })
+        body: JSON.stringify(sticky)
     };
     return fetch(`${ADD_STICKIES}`, init
     ).then(response => response.json());
@@ -53,7 +50,7 @@ const addStickies = (tokenId, id) => {
 
 
 export default {
-    putStickies
+    updateSticky: putStickies
     , getStickies
     , addStickies
 };

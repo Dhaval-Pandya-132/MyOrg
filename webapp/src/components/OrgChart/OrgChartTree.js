@@ -9,6 +9,7 @@ import { getAllUsers } from '../../actions/usersActions'
 import { connect } from 'react-redux';
 import sample from './sample.json'
 import utils from './../../utils/utils'
+import { relativeTimeThreshold } from "moment";
 
 class OrgChartTree extends Component {
     constructor() {
@@ -20,9 +21,9 @@ class OrgChartTree extends Component {
         };
     }
 
-    render() {
-        console.log("this.state.orgDetails.email-->", this.state.orgDetails.email);
-        const nodeList = this.state.usersList.map((user, index) => {
+    getFormattedData = (userList) => {
+        console.log("getFormattedData", this.state.orgDetails)
+        const nodeList = userList.map((user, index) => {
             return {
                 "nodeId": `0-${index + 1}`,
                 "email": user.email
@@ -30,13 +31,14 @@ class OrgChartTree extends Component {
         })
         let rootNodeId;
         nodeList.forEach(node => {
-            if (node.email.toUpperCase() === this.state.orgDetails.email.toUpperCase()) {
+            if (node.email.toUpperCase()
+                === this.state.orgDetails.email.toUpperCase()) {
                 rootNodeId = node.nodeId;
             }
         })
         console.log("rootNodeId", rootNodeId);
 
-        const flist = this.state.usersList.map(obj => {
+        const flist = userList.map(obj => {
             // console.log("obj", obj)
             let parentNodeId;
             let childNodeId;
@@ -81,11 +83,83 @@ class OrgChartTree extends Component {
                 }
             }
         });
+        return flist;
+    }
+
+    render() {
+
+        console.log("this.state orgtree-->", this.state);
+        let userList = [...this.state.usersList];
+        // userList.push({ email: this.state.orgDetails.email, userName: this.state.orgDetails.orgName })
+
+        let finalDataList = [];
+        if (this.state.orgDetails.email !== undefined && userList.length > 1)
+            finalDataList = this.getFormattedData(userList);
+        // const nodeList = userList.map((user, index) => {
+        //     return {
+        //         "nodeId": `0-${index + 1}`,
+        //         "email": user.email
+        //     }
+        // })
+        // let rootNodeId;
+        // nodeList.forEach(node => {
+        //     if (node.email.toUpperCase()
+        //         === this.state.orgDetails.email.toUpperCase()) {
+        //         rootNodeId = node.nodeId;
+        //     }
+        // })
+        // console.log("rootNodeId", rootNodeId);
+
+        // const flist = userList.map(obj => {
+        //     // console.log("obj", obj)
+        //     let parentNodeId;
+        //     let childNodeId;
+        //     nodeList.forEach(u => {
+        //         if (u.email.toUpperCase() === obj.email.toUpperCase()) {
+        //             childNodeId = u.nodeId;
+        //         } else if (obj.managerDetail === undefined || obj.managerDetail.email === undefined) {
+        //             parentNodeId = rootNodeId;
+        //         } else if (obj.managerDetail.email.toUpperCase() === u.email.toUpperCase()) {
+        //             parentNodeId = u.nodeId;
+        //         }
+        //     })
+        //     // return obj
+        //     if (obj.email.toUpperCase() === this.state.orgDetails.email.toUpperCase()) {
+        //         return {
+        //             ...sample
+        //             , nodeId: childNodeId
+        //             , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
+        //             , nodeImage: {
+        //                 ...sample.nodeImage,
+        //                 url: obj.picture
+        //             }
+        //         }
+        //     } else {
+        //         return {
+        //             ...sample
+        //             , nodeId: childNodeId
+        //             , parentNodeId: parentNodeId
+        //             , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
+        //             , nodeImage: {
+        //                 ...sample.nodeImage,
+        //                 url: obj.picture
+        //             }
+        //             , backgroundColor: {
+        //                 ...sample.backgroundColor,
+        //                 "red": 51,
+        //                 "green": 182,
+        //                 "blue": 208,
+        //                 "alpha": 1
+
+        //             }
+        //         }
+        //     }
+        // });
 
 
-        console.log("flist", flist)
+        console.log("flist", finalDataList)
 
-        return <OrgChartComponent data={flist} />;
+        return <OrgChartComponent data={finalDataList} />;
     }
 
 
@@ -98,7 +172,7 @@ class OrgChartTree extends Component {
 
     getUsers = async (tokenId, googleId) => {
 
-        const response = await userService.getUsersByGoogleId(tokenId, { googleId });
+        const response = await userService.getUsersByGoogleId(tokenId, Cookies.get('googleId'));
         console.log("response", response);
         this.setState({ usersList: response });
         this.props.getAllUsers(response)
@@ -113,12 +187,12 @@ class OrgChartTree extends Component {
         this.updateOrgDetails(tokenId, orgId);
         this.getUsers(tokenId, googleId);
         console.log(this.state);
-        d3.json(
-            "https://gist.githubusercontent.com/bumbeishvili/dc0d47bc95ef359fdc75b63cd65edaf2/raw/c33a3a1ef4ba927e3e92b81600c8c6ada345c64b/orgChart.json"
-        ).then(data => {
-            console.log(data[0]);
-            this.setState({ data: data });
-        });
+        // d3.json(
+        //     "https://gist.githubusercontent.com/bumbeishvili/dc0d47bc95ef359fdc75b63cd65edaf2/raw/c33a3a1ef4ba927e3e92b81600c8c6ada345c64b/orgChart.json"
+        // ).then(data => {
+        //     console.log(data[0]);
+        //     this.setState({ data: data });
+        // });
     }
 }
 

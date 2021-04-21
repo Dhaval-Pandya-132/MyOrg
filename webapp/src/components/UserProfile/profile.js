@@ -19,6 +19,7 @@ function Profile(props) {
 
   const token = Cookies.get('tokenId');
   const googleId = Cookies.get('googleId');
+  const orgId = Cookies.get('orgId');
 
   const getUsers = async () => {
     const response = await userService.getUsersByGoogleId(token, { googleId });
@@ -36,7 +37,7 @@ function Profile(props) {
   useEffect(() => {
     getUsers();
     // Getting user profile
-    fetch('http://localhost:8081/user/', {
+    fetch(`http://localhost:8081/user/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

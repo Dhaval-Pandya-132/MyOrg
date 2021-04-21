@@ -4,7 +4,7 @@ import eventController from './../controllers/events.controller';
 import orgController from './../controllers/org.controller';
 import checkAuth from './../middleware/Oauth';
 import recipientsController from '../controllers/recipients.controller';
-import stickyController  from '../controllers/sticky.controller';
+import stickyController from '../controllers/sticky.controller';
 
 const router = express.Router();
 
@@ -61,8 +61,6 @@ router.route('/mymessages/:id')
 
 router.route('/mymessages/')
     //     .post(checkAuth, conversationController.saveConversation);
-
-
     .post(checkAuth, recipientsController.saveRecipient);
 
 
@@ -70,12 +68,14 @@ router.route('/mymessages/')
 
 // Messages API
 router.route('/mystickies/:id')
-   .get(checkAuth,  stickyController.getSticky)
-   .put(checkAuth, stickyController.updateSticky);
+    .get(checkAuth, stickyController.getSticky)
+    .put(checkAuth, stickyController.updateSticky);
 
-   router.route('/mystickies/')
-     .post(checkAuth, stickyController.saveSticky);
-  
+router.route('/mystickies/')
+    .post(checkAuth, stickyController.saveSticky);
+
+router.route('/orgusers/:id')
+    .get(userController.getUsersByOrgId)
 
 
 
