@@ -1,17 +1,15 @@
 import React from 'react';
-import {LeftComponent} from './LeftComponent';
-import{ RightComponent }from './RightComponent';
+import { LeftComponent } from './LeftComponent';
+import { RightComponent } from './RightComponent';
 
-const  StickyNote =()=>{
+const StickyNote = () => {
 
 
 
-    return(
-    <div className= "pageBackground">
-        
-         <LeftComponent></LeftComponent>
-           
-           <RightComponent></RightComponent>
+  return (
+    <div className="pageBackground">
+      <LeftComponent />
+      <RightComponent />
     </div>);
 
 }

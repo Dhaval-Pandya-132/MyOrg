@@ -28,6 +28,9 @@ router.route('/updateprofile')
 router.route('/')
     .get(checkAuth, userController.getUsers);
 
+router.route('/getUsers')
+    .get(checkAuth, userController.getUsers);
+
 
 // Events Routes 
 router.route('/events')
@@ -51,16 +54,16 @@ router.route('/googleEvent/:eventId')
 
 // Messages API
 router.route('/mymessages/:id')
- //   .get(checkAuth, conversationController.getConversation)
- //   .put(checkAuth, conversationController.updateConversation);
-    .get(checkAuth,  recipientsController.getRecipient)
-   .put(checkAuth, recipientsController.updateRecipient);
+    //   .get(checkAuth, conversationController.getConversation)
+    //   .put(checkAuth, conversationController.updateConversation);
+    .get(checkAuth, recipientsController.getRecipient)
+    .put(checkAuth, recipientsController.updateRecipient);
 
 router.route('/mymessages/')
- //     .post(checkAuth, conversationController.saveConversation);
+    //     .post(checkAuth, conversationController.saveConversation);
 
 
-   .post(checkAuth, recipientsController.saveRecipient);
+    .post(checkAuth, recipientsController.saveRecipient);
 
 
 

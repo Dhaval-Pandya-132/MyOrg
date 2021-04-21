@@ -14,7 +14,9 @@ import { showAndHideModal, updateDateRange } from '../../actions/eventFormModalA
 import { addNewEvent, getAllEvents } from '../../actions/calendarActions'
 import ErrorList from '../ErrorList/ErrorList';
 import eventService from '../../services/events.service'
+import userService from '../../services/users.service'
 import List from './List'
+import Cookies from 'js-cookie';
 
 class EventForm extends React.Component {
     constructor(props) {
@@ -22,15 +24,28 @@ class EventForm extends React.Component {
         this.state = {
             formData: { ...EVENTFORM_INIT_STATE },
             errorList: [],
-            userList: [
-                { value: 'dhavalpandya132@gmail.com', label: 'dhavalpandya132@gmail.com' },
-                { value: 'pandya.d@northeastern.edu', label: 'pandya.d@northeastern.edu' },
-                { value: 'dhavalpandya296@gmail.com', label: 'dhavalpandya296@gmail.com' }
-
-            ]
+            userList: []
         }
     }
 
+    componentDidMount() {
+        this.getUsers();
+
+    }
+
+    getUsers = async () => {
+
+        const tokenId = Cookies.get('tokenId');
+        const googleId = Cookies.get('googleId');
+        const response = await userService.getUsersByGoogleId(tokenId, { googleId });
+        console.log("response", response);
+        const userList = response
+            .filter(user => user.googleID !== googleId)
+            .map(object => { return { value: object.email, label: object.email } });
+        //    console.log("response", response)
+        this.setState({ userList: userList });
+
+    }
 
     save = async (event) => {
 
@@ -235,8 +250,8 @@ class EventForm extends React.Component {
                 </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group as={Row} >
+                    <Form >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Title</Form.Label></Col>
                             <Col sm={10}>
                                 <Form.Control id="title"
@@ -248,7 +263,7 @@ class EventForm extends React.Component {
                                 />
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Description</Form.Label></Col>
                             <Col sm={10}>  <Form.Control
                                 id="description"
@@ -258,7 +273,7 @@ class EventForm extends React.Component {
                                 onChange={(event) => { this.onChangeEvent(event) }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Location</Form.Label></Col>
                             <Col sm={10}>  <Form.Control
                                 id="location"
@@ -268,7 +283,7 @@ class EventForm extends React.Component {
                                 onChange={(event) => { this.onChangeEvent(event) }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row} >
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>Start Date and Time</Form.Label>
                             </Col>
@@ -288,7 +303,7 @@ class EventForm extends React.Component {
                                 }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>End Date and Time</Form.Label>
                             </Col>
@@ -308,7 +323,7 @@ class EventForm extends React.Component {
                                 }}
                             /></Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>  <Form.Label>Attendees</Form.Label></Col>
                             <Col sm={10}>
                                 <Select
@@ -325,7 +340,7 @@ class EventForm extends React.Component {
                                 </Select>
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row}>
+                        <Form.Group as={Row} style={{ width: 'auto' }}>
                             <Col sm={2}>
                                 <Form.Label>Add Google Hangout</Form.Label></Col>
                             <Col sm={10}>
@@ -434,7 +449,8 @@ class EventForm extends React.Component {
 const mapStateToProps = (state) => ({
     show: state.eventFormReducer.modalShow,
     dateRange: state.eventFormReducer.dateRange,
-    selectedEvent: state.calendarReducer.selectedEvent
+    selectedEvent: state.calendarReducer.selectedEvent,
+    userList: state.globalStateReducer.userList
 });
 
 const mapDispatchToProps = (dispatch) => ({

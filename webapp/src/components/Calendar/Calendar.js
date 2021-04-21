@@ -47,8 +47,10 @@ class Calender extends Component {
     if (googleEventList.message === "Auth failed") {
       Cookie.remove('tokenId');
       Cookies.remove('accessToken');
+      Cookies.remove('googleId');
       this.props.history.push('signup');
       this.context.setIsAuthenticated(false);
+      alert("Authentication token is expired please sign in again")
       return;
     }
 
@@ -56,27 +58,30 @@ class Calender extends Component {
 
     console.log("googleEventList", googleEventList);
     console.log("EventList", eventList);
-    if (items.length === eventList.length) {
-      this.props.getAllEvents(eventList);
-    } else {
-      let finalEventList = [];
-      items.forEach(async item => {
-        let isExist = false;
-        eventList.forEach(async event => {
-          if (item.id === event.eventId) {
-            isExist = true;
-            finalEventList.push(event);
+    if (items !== undefined) {
+      if (items.length === eventList.length) {
+        this.props.getAllEvents(eventList);
+      } else {
+        let finalEventList = [];
+        items.forEach(async item => {
+          let isExist = false;
+          eventList.forEach(async event => {
+            if (item.id === event.eventId) {
+              isExist = true;
+              finalEventList.push(event);
+            }
+          });
+          if (!isExist) {
+            const eventResponse = await eventService
+              .addEvent(tokenId, { ...item, eventId: item.id });
+            finalEventList.push(eventResponse);
           }
         });
-        if (!isExist) {
-          const eventResponse = await eventService
-            .addEvent(tokenId, { ...item, eventId: item.id });
-          finalEventList.push(eventResponse);
-        }
-      });
-      this.props.getAllEvents(finalEventList);
+        this.props.getAllEvents(finalEventList);
+      }
     }
   }
+
 
   viewEventHandler = (event) => {
     this.setState({ viewEvent: true })
@@ -128,7 +133,10 @@ class Calender extends Component {
 
     return (
 
-      <div ref={this.myRef} {...this.props} style={{ height: 600 }}>
+      <div ref={this.myRef} {...this.props} style={{
+        'height': '900px', 'margin-top': '100px'
+      }
+      }>
         <EventForm show={this.props.show}
           animation={false}
           backdrop={false}
@@ -155,12 +163,12 @@ class Calender extends Component {
             const dateRange = {
               start: {
                 date: moment(slotInfo.start).format("YYYY-MM-DD"),
-                time: moment(slotInfo.start.toLocaleString()).format("hh:mm"),
+                time: moment(slotInfo.start.toLocaleString()).format("HH:mm"),
                 timezone: ""
               },
               end: {
                 date: moment(slotInfo.end).format("YYYY-MM-DD"),
-                time: moment(slotInfo.end.toLocaleString()).format("hh:mm"),
+                time: moment(slotInfo.end.toLocaleString()).format("HH:mm"),
                 timezone: ""
               }
             }
@@ -174,7 +182,7 @@ class Calender extends Component {
           }
           }
         />
-      </div>
+      </div >
     );
   }
 

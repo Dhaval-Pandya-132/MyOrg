@@ -1,14 +1,13 @@
 import React from 'react';
-import Logout from '../Logout/logout';
-import {withRouter} from 'react-router';
-
+import { withRouter } from 'react-router';
+import NavigationHeader from '../Navigation/NavigationHeader'
+import StickyNote from '../StickyNotes/StickyNote'
 function Dashboard(props) {
-  
-
   return (
     <div>
-      In dashboard
-      <Logout {...props}></Logout>
+      <NavigationHeader />
+      {/* <Logout {...props}></Logout> */}
+      <StickyNote></StickyNote>
     </div>
   );
 }

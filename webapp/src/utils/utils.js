@@ -15,5 +15,23 @@ const formatDate = (date) => {
     return `${month}/${day}/${year}`;
 }
 
+const getTemplate = (name, role) => {
+
+    const template = `
+"<div>
+    <div style="margin-left:70px;margin-top:10px;font-size:50px;font-weight:bold;">
+        ${name}
+    </div>
+    <div style="margin-left:70px;margin-top:3px;font-size:30px;">
+           Role: ${role}
+    </div>
+</div>
+`
+    return template;
+
+
+}
+
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { formatDate }
+export default { formatDate, getTemplate }

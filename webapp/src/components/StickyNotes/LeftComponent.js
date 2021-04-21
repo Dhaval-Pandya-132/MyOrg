@@ -1,56 +1,53 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 export const LeftComponent = () => {
     return (
-        
-    
-    
-    // <div className="container">
 
+
+
+        // <div className="container">
 
         <div class="row">
-        
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">
                     <div class="inner">
-                        <h3> 4 </h3>
-                        <p> Calender Events </p>
+                        <h3> Calender Events </h3>
                     </div>
                     <div class="icon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </div>
-                    <a href="calendar" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <Link to="/calendar" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></Link>
                 </div>
             </div>
-        
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-green">
                     <div class="inner">
-                        <h3> 53 </h3>
-                        <p> Organization Chart </p>
+                        <h3>  Organization Chart </h3>
+
                     </div>
                     <div class="icon">
                         <i class="fa fa-users" aria-hidden="true"></i>
                     </div>
-                    <a href="#" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <Link to="/orgchart" class="card-box-footer">View More <i class="fa fa-arrow-circle-right">
+                    </i></Link>
                 </div>
             </div>
-            
-        
+
+
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-orange">
                     <div class="inner">
-                        <h3> 5464 </h3>
-                        <p> Chat with People </p>
+                        <h3> Chat with People  </h3>
                     </div>
                     <div class="icon">
                         <i class="fa fa-comments-o" aria-hidden="true"></i>
                     </div>
-                    <a href="messages" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
+                    <Link to="/messages" class="card-box-footer">View More
+                     <i class="fa fa-arrow-circle-right"></i></Link>
                 </div>
             </div>
-            
-            
+
+
             {/* <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-red">
                     <div class="inner">
@@ -64,9 +61,9 @@ export const LeftComponent = () => {
                 </div>
             </div>   */}
         </div>
-        
-    // </div>
-            
-        
+
+        // </div>
+
+
     )
 }
