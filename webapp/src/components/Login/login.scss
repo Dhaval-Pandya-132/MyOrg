@@ -72,7 +72,7 @@ $button-active-blue: #1669F2;
   height: 40px;
   width:500px;
   border-width: 0;
-  background: white;
+  background: rgba(0,0,0,.79);
   color: #737373;
   border-radius: 5px;
   white-space: nowrap;
@@ -114,6 +114,7 @@ $button-active-blue: #1669F2;
   font-size: 16px;
   font-weight: bold;
   font-family: 'Roboto',arial,sans-serif;
+  color: white;
 }
 
 .login-container{
