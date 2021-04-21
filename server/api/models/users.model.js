@@ -28,13 +28,11 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
     },
-    managerName: {
-      type: String,
-    },
+    managerDetail: {},
     createdDate: {
       type: Date,
-      default:Date.now,
-      required:"Created Date is required"
+      default: Date.now,
+      required: "Created Date is required"
     },
     lastModifiedDate: {
       type: Date,

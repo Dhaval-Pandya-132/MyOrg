@@ -35,7 +35,7 @@ const profile = (user, profile) => {
     user.phoneNumber = profile.phoneNumber;
     user.address = profile.address;
     user.role = profile.role;
-    user.managerName = profile.managerName;
+    user.managerDetail = profile.managerDetail;
     console.log("user ---->", user);
     console.log("profile ---->", profile);
     const promise = userModel.findOneAndUpdate(

@@ -94,9 +94,9 @@ class OrgChartTree extends Component {
             nodeList.forEach(u => {
                 if (u.email.toUpperCase() === obj.email.toUpperCase()) {
                     childNodeId = u.nodeId;
-                } else if (obj.managerEmail === undefined) {
+                } else if (obj.managerDetail === undefined || obj.managerDetail.email === undefined) {
                     parentNodeId = rootNodeId;
-                } else if (obj.managerEmail.toUpperCase() === u.email.toUpperCase()) {
+                } else if (obj.managerDetail.email.toUpperCase() === u.email.toUpperCase()) {
                     parentNodeId = u.nodeId;
                 }
             })
@@ -105,7 +105,7 @@ class OrgChartTree extends Component {
                 return {
                     ...sample
                     , nodeId: childNodeId
-                    , template: utils.getTemplate(obj.userName, "Manager")
+                    , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
                     , nodeImage: {
                         ...sample.nodeImage,
                         url: obj.picture
@@ -116,7 +116,7 @@ class OrgChartTree extends Component {
                     ...sample
                     , nodeId: childNodeId
                     , parentNodeId: parentNodeId
-                    , template: utils.getTemplate(obj.userName, "Manager")
+                    , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
                     , nodeImage: {
                         ...sample.nodeImage,
                         url: obj.picture
