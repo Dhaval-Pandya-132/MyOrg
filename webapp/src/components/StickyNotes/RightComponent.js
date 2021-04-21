@@ -1,41 +1,61 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
+import Cookies from 'js-cookie';
+import ConvService from '../../services/saveconvo.service';
+import StickyService from '../../services/sticky.service'
+import { connect } from 'react-redux';
+import {
+    getAllNotes
+    , addNewNote
+    , deleteNote
+} from '../../actions/stickyNoteActions'
 
-const initialNotesState = {
-    lastNoteCreated: null,
-    totalNotes: 0,
-    notes: [],
-};
 
-const notesReducer = (prevState, action) => {
-    switch (action.type) {
-        case 'ADD_NOTE': {
-            const newState = {
-                notes: [...prevState.notes, action.payload],
-                totalNotes: prevState.notes.length + 1,
-                lastNoteCreated: new Date().toTimeString().slice(0, 8),
-            };
-            console.log('After ADD_NOTE: ', newState);
-            return newState;
-        }
 
-        case 'DELETE_NOTE': {
-            const newState = {
-                ...prevState,
-                notes: prevState.notes.filter(note => note.id !== action.payload.id),
-                totalNotes: prevState.notes.length - 1,
-            };
-            console.log('After DELETE_NOTE: ', newState);
-            return newState;
-        }
-    }
-};
-
-export function RightComponent() {
-    const [notesState, dispatch] = useReducer(notesReducer, initialNotesState);
+const RightComponent = (props) => {
+    //  const [notesState, dispatch] = useReducer(notesReducer, initialNotesState);
     const [noteInput, setNoteInput] = useState('');
+    const [userDetails, setUserDetails] = useState({})
+    const tokenId = Cookies.get('tokenId');
+    const { notesState } = { ...props };
+    console.log("notesState", notesState);
+
+    // const getUserDetail = async () => {
+    //     const response = await ConvService.getUser(tokenId);
+    //     // console.log("getUserDetail---->", response);
+    //     setUserDetails({ ...response }, getStickyNotes())
+    // }
+    // const getStickyNotes = async () => {
+    //     console.log("userDetails getStickyNotes--->", userDetails);
+    //     const response = await StickyService.getStickies(tokenId, userDetails.email)
+    //     console.log("getStickyNotes--->", response)
+    //     props.getAllNotes({ ...response })
+    // }
+
+
+    const getInitialDetail = () => {
+        ConvService.getUser(tokenId)
+            .then(userDetail => {
+                setUserDetails({ ...userDetail })
+                if (userDetail !== null) {
+                    StickyService.getStickies(tokenId, userDetail.email)
+                        .then(stickiesNotes => {
+                            console.log("StickyService.getStickies", stickiesNotes)
+                            props.getAllNotes({ ...stickiesNotes })
+                        });
+                }
+            })
+    }
+
+
+    useEffect(() => {
+        getInitialDetail()
+    }, [])
 
     const addNote = event => {
+        // console.log("props.notesState", props.notesState)
+        let stickies = props.notesState.notes;
+
         event.preventDefault();
         if (!noteInput) {
             return;
@@ -44,12 +64,33 @@ export function RightComponent() {
         const newNote = {
             id: uuid(),
             text: noteInput,
-            rotate: Math.floor(Math.random() * 20)
+            rotate: Math.floor(Math.random() * 20),
+            createdDate: new Date()
         }
-
-        dispatch({ type: 'ADD_NOTE', payload: newNote });
+        props.addNewNote({ ...newNote });
+        stickies.push(newNote);
+        if (stickies.length === 1) {
+            StickyService.addStickies(tokenId, {
+                userEmail
+                    : userDetails.email
+                , stickies: stickies
+            }).then(response => console.log("stickunote added ", response))
+        } else {
+            StickyService.updateSticky(tokenId, userDetails.email, stickies)
+                .then(response => console.log("sticky updated", response));
+        }
         setNoteInput('');
     };
+
+    const deleteNote = (note) => {
+        props.deleteNote(note)
+        let stickies = props.notesState.notes.filter(nt => note.id !== nt.id);
+        console.log("after delete--?", stickies, userDetails.email)
+        StickyService.updateSticky(tokenId, userDetails.email
+            , stickies)
+
+    }
+
 
     const dragOver = event => {
         event.stopPropagation();
@@ -63,8 +104,6 @@ export function RightComponent() {
 
     return (
         <div>
-
-
 
             {/* <img src="Images/logo.PNG" alt="logo" class="logo"/> */}
 
@@ -117,7 +156,7 @@ export function RightComponent() {
                             draggable="true"
                             key={note.id}>
 
-                            <div onClick={() => dispatch({ type: 'DELETE_NOTE', payload: note })}
+                            <div onClick={() => deleteNote(note)}
                                 className="close">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -135,3 +174,17 @@ export function RightComponent() {
         </div>
     );
 }
+
+
+
+const mapStateToProps = (state) => ({
+    notesState: state.notesReducer
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    getAllNotes: (stickyNotes) => getAllNotes(dispatch, stickyNotes),
+    addNewNote: (stickyNote) => addNewNote(dispatch, stickyNote),
+    deleteNote: (id) => deleteNote(dispatch, id)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(RightComponent);

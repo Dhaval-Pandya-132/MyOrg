@@ -9,6 +9,7 @@ import { getAllUsers } from '../../actions/usersActions'
 import { connect } from 'react-redux';
 import sample from './sample.json'
 import utils from './../../utils/utils'
+import { relativeTimeThreshold } from "moment";
 
 class OrgChartTree extends Component {
     constructor() {
@@ -20,9 +21,9 @@ class OrgChartTree extends Component {
         };
     }
 
-    render() {
-        console.log("this.state.orgDetails.email-->", this.state.orgDetails.email);
-        const nodeList = this.state.usersList.map((user, index) => {
+    getFormattedData = (userList) => {
+        console.log("getFormattedData", this.state.orgDetails)
+        const nodeList = userList.map((user, index) => {
             return {
                 "nodeId": `0-${index + 1}`,
                 "email": user.email
@@ -30,13 +31,14 @@ class OrgChartTree extends Component {
         })
         let rootNodeId;
         nodeList.forEach(node => {
-            if (node.email.toUpperCase() === this.state.orgDetails.email.toUpperCase()) {
+            if (node.email.toUpperCase()
+                === this.state.orgDetails.email.toUpperCase()) {
                 rootNodeId = node.nodeId;
             }
         })
         console.log("rootNodeId", rootNodeId);
 
-        const flist = this.state.usersList.map(obj => {
+        const flist = userList.map(obj => {
             // console.log("obj", obj)
             let parentNodeId;
             let childNodeId;
@@ -81,28 +83,44 @@ class OrgChartTree extends Component {
                 }
             }
         });
+        return flist;
+    }
 
+    render() {
 
-        console.log("flist", flist)
+        console.log("this.state orgtree-->", this.state);
+        let userList = [...this.state.usersList];
+        if (this.state.orgDetails.email !== undefined)
+            userList.push({ email: this.state.orgDetails.email, userName: this.state.orgDetails.orgName })
 
-        return <OrgChartComponent data={flist} />;
+        let finalDataList = [];
+        if (this.state.orgDetails.email !== undefined && userList.length > 1)
+            finalDataList = this.getFormattedData(userList);
+
+        console.log("flist", finalDataList)
+
+        return <OrgChartComponent data={finalDataList} />;
     }
 
 
-    updateOrgDetails = async (tokenId, orgID) => {
-        const response = await orgServices
-            .getOrgDetails(tokenId, orgID);
-        this.setState({ orgDetails: response });
-        this.props.getOrgDetails(response);
+    updateOrgDetails = (tokenId, orgID) => {
+        orgServices
+            .getOrgDetails(tokenId, orgID)
+            .then(response => {
+                this.setState({ orgDetails: response });
+                this.props.getOrgDetails(response);
+            })
+
     }
 
-    getUsers = async (tokenId, googleId) => {
-
-        const response = await userService.getUsersByGoogleId(tokenId, { googleId });
-        console.log("response", response);
-        this.setState({ usersList: response });
-        this.props.getAllUsers(response)
-
+    getUsers = (tokenId, googleId) => {
+        userService.getUsersByGoogleId(tokenId,
+            { googleId: googleId })
+            .then(response => {
+                console.log("response", response);
+                this.setState({ usersList: response });
+                this.props.getAllUsers(response)
+            })
     }
 
 
@@ -113,12 +131,12 @@ class OrgChartTree extends Component {
         this.updateOrgDetails(tokenId, orgId);
         this.getUsers(tokenId, googleId);
         console.log(this.state);
-        d3.json(
-            "https://gist.githubusercontent.com/bumbeishvili/dc0d47bc95ef359fdc75b63cd65edaf2/raw/c33a3a1ef4ba927e3e92b81600c8c6ada345c64b/orgChart.json"
-        ).then(data => {
-            console.log(data[0]);
-            this.setState({ data: data });
-        });
+        // d3.json(
+        //     "https://gist.githubusercontent.com/bumbeishvili/dc0d47bc95ef359fdc75b63cd65edaf2/raw/c33a3a1ef4ba927e3e92b81600c8c6ada345c64b/orgChart.json"
+        // ).then(data => {
+        //     console.log(data[0]);
+        //     this.setState({ data: data });
+        // });
     }
 }
 

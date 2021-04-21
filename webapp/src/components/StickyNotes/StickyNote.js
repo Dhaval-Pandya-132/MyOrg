@@ -1,6 +1,6 @@
 import React from 'react';
 import { LeftComponent } from './LeftComponent';
-import { RightComponent } from './RightComponent';
+import RightComponent from './RightComponent';
 
 const StickyNote = () => {
 

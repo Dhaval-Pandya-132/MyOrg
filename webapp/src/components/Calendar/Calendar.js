@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { connect } from 'react-redux';
-import events from '../events';
+// import events from '../events';
 import moment from 'moment';
 import 'react-big-calendar-like-google/lib/css/react-big-calendar.css'
 import Cookie from "js-cookie";
@@ -128,9 +128,6 @@ class Calender extends Component {
 
 
     console.log("eventsList", eventsList);
-    console.log("event", events);
-
-
     return (
 
       <div ref={this.myRef} {...this.props} style={{
