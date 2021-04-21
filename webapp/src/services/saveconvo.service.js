@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import {
     GET_CONVERSATIONS
     , UPDATE_CONVERSATIONS
@@ -78,8 +79,6 @@ const getUsers = (tokenId) => {
     };
     return fetch(`${GET_USERS}`, init).then(response => response.json());
 }
-
-
 
 
 export default {

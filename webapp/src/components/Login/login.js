@@ -144,7 +144,7 @@ function Login(props) {
                 className="form-control"
                 value={orgName}
                 onChange={(e) => { setOrgName(e.target.value) }}
-                placeholder="Enter Organization Name"
+                placeholder="Enter Name"
                 required />
             </Form.Group>
             <Form.Group controlId="orgEmail">
