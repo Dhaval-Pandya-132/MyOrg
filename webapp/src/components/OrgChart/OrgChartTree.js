@@ -121,6 +121,14 @@ class OrgChartTree extends Component {
                         ...sample.nodeImage,
                         url: obj.picture
                     }
+                    , backgroundColor: {
+                        ...sample.backgroundColor,
+                        "red": 51,
+                        "green": 182,
+                        "blue": 208,
+                        "alpha": 1
+
+                    }
                 }
             }
         });
