@@ -3,24 +3,29 @@ import mongoose from "mongoose";
 
 const stickySchema = new mongoose.Schema(
     {
-        sid: {
-            type: String,
-            required: "summary / title is required"
-        },
-        rotate: {
-            type: Int16Array
-        },
-        text: {
+
+        userEmail: {
             type: String
-        },
-        lastNoteCreated: {
+          },
+          stickies: [
+          {
+            sid: {
             type: String
-        },
-        createdDate: {
-            type: Date,
-            default: Date.now,
-            required: "Created Date is required"
-        }
+          },
+          text: 
+          { 
+            type: String
+          
+          },
+     
+            createdDate: {
+                type: Date,
+                default: Date.now,
+                required: "Created Date is required"
+            }
+            
+          }]
+
     }
 );
 
@@ -30,6 +35,6 @@ stickySchema.virtual("id").get(function () {
 
 stickySchema.set("toJSON", { virtual: true });
 
-const model = mongoose.model("events", stickySchema);
+const model = mongoose.model("stickies", stickySchema);
 
 export default model;

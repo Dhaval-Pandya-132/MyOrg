@@ -4,7 +4,7 @@ import eventController from './../controllers/events.controller';
 import orgController from './../controllers/org.controller';
 import checkAuth from './../middleware/Oauth';
 import recipientsController from '../controllers/recipients.controller';
-import conversationController from '../controllers/conversations.controller';
+import stickyController  from '../controllers/sticky.controller';
 
 const router = express.Router();
 
@@ -68,6 +68,14 @@ router.route('/mymessages/')
 
 
 
+// Messages API
+router.route('/mystickies/:id')
+   .get(checkAuth,  stickyController.getSticky)
+   .put(checkAuth, stickyController.updateSticky);
+
+   router.route('/mystickies/')
+     .post(checkAuth, stickyController.saveSticky);
+  
 
 
 

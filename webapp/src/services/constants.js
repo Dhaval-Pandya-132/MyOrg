@@ -20,3 +20,9 @@ export const UPDATE_CONVERSATIONS = `${SERVER_ENDPOINT}/mymessages`
 export const ADD_NEW_CONVERSATIONS = `${SERVER_ENDPOINT}/mymessages`
 export const GET_USER = `${SERVER_ENDPOINT}/user`
 export const GET_USERS = `${SERVER_ENDPOINT}/`
+
+
+// Stickies API
+export const GET_STICKIES = `${SERVER_ENDPOINT}/mystickies`
+export const UPDATE_STICKIES = `${SERVER_ENDPOINT}/mystickies`
+export const ADD_STICKIES = `${SERVER_ENDPOINT}/mystickies`

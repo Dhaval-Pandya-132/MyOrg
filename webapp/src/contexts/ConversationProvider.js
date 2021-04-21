@@ -17,7 +17,7 @@ export function ConversationProvider({ id, children }) {
   const { contacts } = useContacts();
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const socket = useSocket();
-  const [messageDetail, setMessageDetails] =  useState({});
+  const [messageDetail, setMessageDetails] = useState({});
 
 
 
@@ -25,39 +25,39 @@ export function ConversationProvider({ id, children }) {
   const formattedConversations = conversations.map((conversation, index) => {
     const recipients = conversation.recipients.map(recipient => {
       const contact = contacts.find(contact => {
-     //   console.log('conversationProvider', contact.id)
+        //   console.log('conversationProvider', contact.id)
         return contact.id === recipient
       })
-      const name =  (contact && contact.userName) || recipient
+      const name = (contact && contact.userName) || recipient
       return { id: recipient, name }
     })
 
     const messages = conversation.messages.map(message => {
-        const contact = contacts.find(contact => {
-          return contact.id === message.sender
-        })
-        const name = (contact && contact.name) || message.sender
-        const fromMe = id === message.sender
-        return { ...message, senderName: name, fromMe }
+      const contact = contacts.find(contact => {
+        return contact.id === message.sender
+      })
+      const name = (contact && contact.name) || message.sender
+      const fromMe = id === message.sender
+      return { ...message, senderName: name, fromMe }
     })
 
 
     const selected = index === selectedConversationIndex
-    return { ...conversation, messages,  recipients, selected }
+    return { ...conversation, messages, recipients, selected }
   })
 
 
 
-//  APIs
-useEffect(() => {
+  //  APIs
+  useEffect(() => {
     let mounted = true;
     ChatService.getConversations(Cookies.get('tokenId'), id)       // fetchUsersConvo()
-      .then(items => { 
-        if(mounted) {
-          if(items){
+      .then(items => {
+        if (mounted) {
+          if (items) {
             setConversations(items.conversations);
           } else {
-             ChatService.addConversations(Cookies.get('tokenId'), id) //createConversationDoc() 
+            ChatService.addConversations(Cookies.get('tokenId'), id) //createConversationDoc() 
           }
         }
       })
@@ -66,97 +66,98 @@ useEffect(() => {
 
 
   function createConversation(recipients) {
-   let flag = false;
-    let conv = formattedConversations.map(conv=> conv.recipients.map( rec => rec.id))
-   for(let i = 0; i  < conv.length; i++){
-  
-     
-      flag =  arrayEquality(conv[i], recipients)
+    let flag = false;
+    let conv = formattedConversations.map(conv => conv.recipients.map(rec => rec.id))
+    for (let i = 0; i < conv.length; i++) {
 
-        if(flag)
-          break;
+
+      flag = arrayEquality(conv[i], recipients)
+
+      if (flag)
+        break;
 
 
     }
 
 
-    if(!flag)
-          setConversations(prevConversations => { return [...prevConversations, { recipients, messages: [] }]
-    })
+    if (!flag)
+      setConversations(prevConversations => {
+        return [...prevConversations, { recipients, messages: [] }]
+      })
   }
 
   const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
 
     // Get previous conversations
     setConversations(prevConversations => {
-        
-        let madeChange = false
-        const newMessage = { sender, text }
-        const newConversations = prevConversations.map(
-            conversation => {
-              console.log('XXXX conversation', conversation)
-              console.log('XXXX recipient', recipients)
-                if(arrayEquality(conversation.recipients, recipients)){
 
-                    madeChange = true
-                    return {
-                        ...conversation,
-                        messages: [...conversation.messages, newMessage ]
-                    }
-                }
+      let madeChange = false
+      const newMessage = { sender, text }
+      const newConversations = prevConversations.map(
+        conversation => {
+          console.log('XXXX conversation', conversation)
+          console.log('XXXX recipient', recipients)
+          if (arrayEquality(conversation.recipients, recipients)) {
 
-                return conversation
-
-            })
-        
-        
-        
-        // Its a new conversation
-        if(madeChange){
-
-            console.log("new conversations");
-            console.log(newConversations);
-            ChatService.updateConversations(Cookies.get('tokenId'), id, newConversations);
-
-
-            return newConversations
-        }
-        // get previous conversation
-        else {
-
-          const conversationsObj = {
-            recipients: recipients,
-            messages: newMessage
+            madeChange = true
+            return {
+              ...conversation,
+              messages: [...conversation.messages, newMessage]
+            }
           }
 
+          return conversation
 
-
-         // console.log('prevConversations', prevConversations)
-
-          console.log('New Message', newMessage)
-          ChatService.updateConversations(Cookies.get('tokenId'), id, conversationsObj);
+        })
 
 
 
+      // Its a new conversation
+      if (madeChange) {
 
-          return [
-                ...prevConversations, 
-                { recipients, messages: [newMessage] }
-            ]
+        console.log("new conversations");
+        console.log(newConversations);
+        ChatService.updateConversations(Cookies.get('tokenId'), id, newConversations);
+
+
+        return newConversations
+      }
+      // get previous conversation
+      else {
+
+        const conversationsObj = {
+          recipients: recipients,
+          messages: newMessage
         }
 
-    })
-    
-    }, [setConversations])
 
- 
+
+        // console.log('prevConversations', prevConversations)
+
+        console.log('New Message', newMessage)
+        ChatService.updateConversations(Cookies.get('tokenId'), id, conversationsObj);
+
+
+
+
+        return [
+          ...prevConversations,
+          { recipients, messages: [newMessage] }
+        ]
+      }
+
+    })
+
+  }, [setConversations])
+
+
 
 
   useEffect(() => {
-    if(socket == null){ 
+    if (socket == null) {
       console.log("XXXX messageDetails")
       console.log(messageDetail);
-     
+
       return
     }
 
@@ -166,13 +167,13 @@ useEffect(() => {
 
 
     return () => socket.off('recieve-message')
-  }, [socket, addMessageToConversation, messageDetail]) 
+  }, [socket, addMessageToConversation, messageDetail])
 
 
-  function sendMessage(recipients, text){
+  function sendMessage(recipients, text) {
 
-    addMessageToConversation({ recipients, text, sender: id })    
-    
+    addMessageToConversation({ recipients, text, sender: id })
+
     setMessageDetails({ recipients, text, sender: id })
 
     socket.emit('send-message', { recipients, text })
@@ -192,19 +193,19 @@ useEffect(() => {
 
   return (
     <ConversationsContext.Provider value={value}>
-      {children} 
+      {children}
     </ConversationsContext.Provider>
   )
 }
 
 
-function arrayEquality(a, b){
-    if(a.length !== b.length) return false;
+function arrayEquality(a, b) {
+  if (a.length !== b.length) return false;
 
-    a.sort()
-    b.sort()
+  a.sort()
+  b.sort()
 
-    return a.every((element, index) => {
-        return element === b[index]
-    })
+  return a.every((element, index) => {
+    return element === b[index]
+  })
 }

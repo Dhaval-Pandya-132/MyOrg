@@ -7,8 +7,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="root-container">
-        <h1 >My Organization</h1>
+      <div className="bg-dark vh-100">
         <Login {...this.props}></Login>
       </div>
     );
