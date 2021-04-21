@@ -7,6 +7,14 @@ $button-active-blue: #1669F2;
   width:530px;
 }
 
+.login-div{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: fit-content;
+  transform: translate(-50%, -50%);
+}
+
 //login policy
 .login-policy{
     font-size: 15px;
