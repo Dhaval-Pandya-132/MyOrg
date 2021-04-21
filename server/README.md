@@ -47,8 +47,6 @@ http://localhost:8081/
 
 ### API Endpoints
 
-### Maintainer
-
 <table>
     <thead>
       <tr>
