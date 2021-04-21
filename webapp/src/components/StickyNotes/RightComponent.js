@@ -37,12 +37,13 @@ const RightComponent = (props) => {
         ConvService.getUser(tokenId)
             .then(userDetail => {
                 setUserDetails({ ...userDetail })
-                StickyService.getStickies(tokenId, userDetail.email)
-                    .then(stickiesNotes => {
-                        console.log("StickyService.getStickies", stickiesNotes)
-                        props.getAllNotes({ ...stickiesNotes })
-                    });
-
+                if (userDetail !== null) {
+                    StickyService.getStickies(tokenId, userDetail.email)
+                        .then(stickiesNotes => {
+                            console.log("StickyService.getStickies", stickiesNotes)
+                            props.getAllNotes({ ...stickiesNotes })
+                        });
+                }
             })
     }
 

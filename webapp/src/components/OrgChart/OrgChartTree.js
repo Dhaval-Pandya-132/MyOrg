@@ -90,72 +90,12 @@ class OrgChartTree extends Component {
 
         console.log("this.state orgtree-->", this.state);
         let userList = [...this.state.usersList];
-        // userList.push({ email: this.state.orgDetails.email, userName: this.state.orgDetails.orgName })
+        if (this.state.orgDetails.email !== undefined)
+            userList.push({ email: this.state.orgDetails.email, userName: this.state.orgDetails.orgName })
 
         let finalDataList = [];
         if (this.state.orgDetails.email !== undefined && userList.length > 1)
             finalDataList = this.getFormattedData(userList);
-        // const nodeList = userList.map((user, index) => {
-        //     return {
-        //         "nodeId": `0-${index + 1}`,
-        //         "email": user.email
-        //     }
-        // })
-        // let rootNodeId;
-        // nodeList.forEach(node => {
-        //     if (node.email.toUpperCase()
-        //         === this.state.orgDetails.email.toUpperCase()) {
-        //         rootNodeId = node.nodeId;
-        //     }
-        // })
-        // console.log("rootNodeId", rootNodeId);
-
-        // const flist = userList.map(obj => {
-        //     // console.log("obj", obj)
-        //     let parentNodeId;
-        //     let childNodeId;
-        //     nodeList.forEach(u => {
-        //         if (u.email.toUpperCase() === obj.email.toUpperCase()) {
-        //             childNodeId = u.nodeId;
-        //         } else if (obj.managerDetail === undefined || obj.managerDetail.email === undefined) {
-        //             parentNodeId = rootNodeId;
-        //         } else if (obj.managerDetail.email.toUpperCase() === u.email.toUpperCase()) {
-        //             parentNodeId = u.nodeId;
-        //         }
-        //     })
-        //     // return obj
-        //     if (obj.email.toUpperCase() === this.state.orgDetails.email.toUpperCase()) {
-        //         return {
-        //             ...sample
-        //             , nodeId: childNodeId
-        //             , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
-        //             , nodeImage: {
-        //                 ...sample.nodeImage,
-        //                 url: obj.picture
-        //             }
-        //         }
-        //     } else {
-        //         return {
-        //             ...sample
-        //             , nodeId: childNodeId
-        //             , parentNodeId: parentNodeId
-        //             , template: utils.getTemplate(obj.userName, obj.role === undefined ? "N/A" : obj.role)
-        //             , nodeImage: {
-        //                 ...sample.nodeImage,
-        //                 url: obj.picture
-        //             }
-        //             , backgroundColor: {
-        //                 ...sample.backgroundColor,
-        //                 "red": 51,
-        //                 "green": 182,
-        //                 "blue": 208,
-        //                 "alpha": 1
-
-        //             }
-        //         }
-        //     }
-        // });
-
 
         console.log("flist", finalDataList)
 
@@ -163,20 +103,24 @@ class OrgChartTree extends Component {
     }
 
 
-    updateOrgDetails = async (tokenId, orgID) => {
-        const response = await orgServices
-            .getOrgDetails(tokenId, orgID);
-        this.setState({ orgDetails: response });
-        this.props.getOrgDetails(response);
+    updateOrgDetails = (tokenId, orgID) => {
+        orgServices
+            .getOrgDetails(tokenId, orgID)
+            .then(response => {
+                this.setState({ orgDetails: response });
+                this.props.getOrgDetails(response);
+            })
+
     }
 
-    getUsers = async (tokenId, googleId) => {
-
-        const response = await userService.getUsersByGoogleId(tokenId, Cookies.get('googleId'));
-        console.log("response", response);
-        this.setState({ usersList: response });
-        this.props.getAllUsers(response)
-
+    getUsers = (tokenId, googleId) => {
+        userService.getUsersByGoogleId(tokenId,
+            { googleId: googleId })
+            .then(response => {
+                console.log("response", response);
+                this.setState({ usersList: response });
+                this.props.getAllUsers(response)
+            })
     }
 
 
